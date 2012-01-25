@@ -1,4 +1,4 @@
-This is a daemon that uses input from coretemp module and sets the fan speed using the applesmc module.
+This is a daemon that uses input from coretemp module and sets the fan speed using the applesmc module. It includes a PKGBUILD for easy installation in Arch Linux.
 
 Based on:
 
