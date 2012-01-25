@@ -8,7 +8,8 @@ arch=('i686' 'x86_64')
 license=('GPL3')
 source=(mbpfan.c 
         mbpfan.rc)
-md5sums=('6febab2978d51dfe4c4ff550ace35fc2'
+
+md5sums=('57be3248ffa6563f06435f0b3b3451f5'
          '6b58ce23ade4c2ccb8cadc004bb9e172')
 
 build() {
