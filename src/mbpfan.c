@@ -39,63 +39,27 @@
 #define min(a,b) a < b ? a : b
 #define max(a,b) a > b ? a : b
 
-unsigned short min_fan_speed = 2000;
-unsigned short max_fan_speed = 6200;
+int min_fan_speed = 2000;
+int max_fan_speed = 6200;
 
 /* temperature thresholds
  * low_temp - temperature below which fan speed will be at minimum
  * high_temp - fan will increase speed when higher than this temperature
  * max_temp - fan will run at full speed above this temperature */
-unsigned short low_temp = 63;   // try ranges 55-63
-unsigned short high_temp = 66;  // try ranges 58-66
-unsigned short max_temp = 86;   // do not set it > 90
+int low_temp = 63;   // try ranges 55-63
+int high_temp = 66;  // try ranges 58-66
+int max_temp = 86;   // do not set it > 90
 
-unsigned short polling_interval = 7;
+int polling_interval = 5;
 
 
 struct s_sensors {
         char* path;
-        char* fan_path;
+        char* fan_min_path;
+        char* fan_man_path;
         unsigned int temperature;
         struct s_sensors *next;
 };
-
-void find_fans(t_sensors* sensors)
-{
-        t_sensors *tmp = sensors;
-
-        char *path = NULL;
-        const char *path_begin = "/sys/devices/platform/applesmc.768/fan";
-        const char *path_end = "_min";
-        int path_size = strlen(path_begin) + strlen(path_end) + 2;
-        char number[1];
-        sprintf(number,"%d",0);
-
-        int counter = 0;
-
-        for(counter = 0; counter<10; counter++) {
-                path = (char*) malloc(sizeof( char ) * path_size);
-                path[0] = '\0';
-                sprintf(number,"%d",counter);
-
-                strncat( path, path_begin, strlen(path_begin) );
-                strncat( path, number, strlen(number) );
-                strncat( path, path_end, strlen(path_begin) );
-
-                FILE *file = fopen(path, "r");
-
-                if(file != NULL) {
-                        if (tmp->path != NULL)
-                                tmp->fan_path = (char *) malloc(sizeof( char ) * path_size);
-                        strcpy(tmp->fan_path, path);
-                        tmp = tmp->next;
-                        fclose(file);
-                }
-        }
-
-        free(path);
-        path = NULL;
-}
 
 
 t_sensors *find_sensors()
@@ -128,7 +92,7 @@ t_sensors *find_sensors()
                         s = (t_sensors *) malloc( sizeof( t_sensors ) );
                         s->path = (char *) malloc(sizeof( char ) * path_size);
                         strcpy(s->path, path);
-                        int result = fscanf(file, "%d", &s->temperature);
+                        fscanf(file, "%d", &s->temperature);
                         if (sensors_head == NULL) {
                                 sensors_head = s;
                                 sensors_head->next = NULL;
@@ -150,6 +114,75 @@ t_sensors *find_sensors()
         return sensors_head;
 }
 
+void find_fans(t_sensors* sensors)
+{
+        t_sensors *tmp = sensors;
+
+        char *path_min = NULL;
+        char *path_man = NULL;
+
+        const char *path_begin = "/sys/devices/platform/applesmc.768/fan";
+        const char *path_min_end = "_min";
+        const char *path_man_end = "_manual";
+
+        int path_min_size = strlen(path_begin) + strlen(path_min_end) + 2;
+        int path_man_size = strlen(path_begin) + strlen(path_man_end) + 2;
+        char number[1];
+        sprintf(number,"%d",0);
+
+        int counter = 0;
+
+        for(counter = 0; counter<10; counter++) {
+                path_min = (char*) malloc(sizeof( char ) * path_min_size);
+                path_min[0] = '\0';
+                path_man = (char*) malloc(sizeof( char ) * path_man_size);
+                path_man[0] = '\0';
+                sprintf(number,"%d",counter);
+
+                strncat( path_min, path_begin, strlen(path_begin) );
+                strncat( path_min, number, strlen(number) );
+                strncat( path_min, path_min_end, strlen(path_begin) );
+
+                strncat( path_man, path_begin, strlen(path_begin) );
+                strncat( path_man, number, strlen(number) );
+                strncat( path_man, path_man_end, strlen(path_begin) );
+
+
+                FILE *file = fopen(path_min, "r");
+
+                if(file != NULL) {
+                        if (tmp->path != NULL){
+                            tmp->fan_min_path = (char *) malloc(sizeof( char ) * path_min_size);
+                            tmp->fan_man_path = (char *) malloc(sizeof( char ) * path_man_size);
+                        }
+                        strcpy(tmp->fan_min_path, path_min);
+                        strcpy(tmp->fan_man_path, path_man);
+                        tmp = tmp->next;
+                        fclose(file);
+                }
+        }
+
+        free(path_min);
+        path_min = NULL;
+        free(path_man);
+        path_man = NULL;
+}
+
+void set_fans_man(t_sensors *sensors)
+{
+
+        t_sensors *tmp = sensors;
+        FILE *file;
+        while(tmp != NULL) {
+                file = fopen(tmp->fan_man_path, "rw+");
+                if(file != NULL) {
+                        fprintf(file, "%d", 0);
+                        fclose(file);
+                }
+                tmp = tmp->next;
+        }
+}
+
 t_sensors *refresh_sensors(t_sensors *sensors)
 {
 
@@ -159,7 +192,7 @@ t_sensors *refresh_sensors(t_sensors *sensors)
                 FILE *file = fopen(tmp->path, "r");
 
                 if(file != NULL) {
-                        int result = fscanf(file, "%d", &tmp->temperature);
+                        fscanf(file, "%d", &tmp->temperature);
                         fclose(file);
                 }
 
@@ -171,14 +204,12 @@ t_sensors *refresh_sensors(t_sensors *sensors)
 
 
 /* Controls the speed of the fan */
-void set_fan_speed(t_sensors* sensors, unsigned short speed)
+void set_fan_speed(t_sensors* sensors, int speed)
 {
-
         t_sensors *tmp = sensors;
-
+        FILE *file;
         while(tmp != NULL) {
-                FILE *file = fopen(tmp->path, "rw");
-
+                file = fopen(tmp->fan_min_path, "rw+");
                 if(file != NULL) {
                         fprintf(file, "%d", speed);
                         fclose(file);
@@ -210,12 +241,12 @@ unsigned short get_temp(t_sensors* sensors)
 
 int main()
 {
-        unsigned short old_temp, new_temp, fan_speed, steps;
-        short temp_change;
-        float step_up, step_down;
+        int old_temp, new_temp, fan_speed, steps;
+        int temp_change;
+        int step_up, step_down;
 
         t_sensors* sensors = find_sensors();
-
+        set_fans_man(sensors);
         new_temp = get_temp(sensors);
         fan_speed = 2000;
         set_fan_speed(sensors, fan_speed);
