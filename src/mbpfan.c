@@ -28,12 +28,14 @@
  */
 
 
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <math.h>
+#include <syslog.h>
 #include "mbpfan.h"
+#include "global.h"
 
 /* lazy min/max... */
 #define min(a,b) a < b ? a : b
@@ -62,7 +64,7 @@ struct s_sensors {
 };
 
 
-t_sensors *find_sensors()
+t_sensors *retrieve_sensors()
 {
 
         t_sensors *sensors_head = NULL;
@@ -130,14 +132,15 @@ void find_fans(t_sensors* sensors)
         char number[1];
         sprintf(number,"%d",0);
 
-        int counter = 0;
+        int n_sensors = 0;
+        int n_fans = 0;
 
-        for(counter = 0; counter<10; counter++) {
+        for(n_sensors = 0; n_sensors<10; n_sensors++) {
                 path_min = (char*) malloc(sizeof( char ) * path_min_size);
                 path_min[0] = '\0';
                 path_man = (char*) malloc(sizeof( char ) * path_man_size);
                 path_man[0] = '\0';
-                sprintf(number,"%d",counter);
+                sprintf(number,"%d",n_sensors);
 
                 strncat( path_min, path_begin, strlen(path_begin) );
                 strncat( path_min, number, strlen(number) );
@@ -151,14 +154,22 @@ void find_fans(t_sensors* sensors)
                 FILE *file = fopen(path_min, "r");
 
                 if(file != NULL) {
-                        if (tmp->path != NULL){
-                            tmp->fan_min_path = (char *) malloc(sizeof( char ) * path_min_size);
-                            tmp->fan_man_path = (char *) malloc(sizeof( char ) * path_man_size);
+                        if (tmp->path != NULL) {
+                                tmp->fan_min_path = (char *) malloc(sizeof( char ) * path_min_size);
+                                tmp->fan_man_path = (char *) malloc(sizeof( char ) * path_man_size);
                         }
                         strcpy(tmp->fan_min_path, path_min);
                         strcpy(tmp->fan_man_path, path_man);
                         tmp = tmp->next;
+                        n_fans++;
                         fclose(file);
+                }
+        }
+
+        if(verbose) {
+                printf("Found %d: sensors and %d fans\n", n_sensors, n_fans);
+                if(daemonize) {
+                        syslog(LOG_INFO, "Found %d: sensors and %d fans", n_sensors, n_fans);
                 }
         }
 
@@ -239,17 +250,24 @@ unsigned short get_temp(t_sensors* sensors)
 }
 
 
-int main()
+void mbpfan()
 {
         int old_temp, new_temp, fan_speed, steps;
         int temp_change;
         int step_up, step_down;
 
-        t_sensors* sensors = find_sensors();
+        t_sensors* sensors = retrieve_sensors();
         set_fans_man(sensors);
         new_temp = get_temp(sensors);
         fan_speed = 2000;
         set_fan_speed(sensors, fan_speed);
+
+        if(verbose) {
+                printf("Sleeping for %d seconds\n", polling_interval);
+                if(daemonize) {
+                        syslog(LOG_INFO, "Sleeping for %d seconds\n", polling_interval);
+                }
+        }
         sleep(polling_interval);
 
         step_up = (float)( max_fan_speed - min_fan_speed ) /
@@ -282,11 +300,21 @@ int main()
                         fan_speed = min( fan_speed, floor(max_fan_speed - steps * step_down) );
                 }
 
+                if(verbose) {
+                        printf("Old Temp %d: New Temp: %d, Fan Speed: %d\n", old_temp, new_temp, fan_speed);
+                        if(daemonize) {
+                                syslog(LOG_INFO, "Old Temp %d: New Temp: %d, Fan Speed: %d\n", old_temp, new_temp, fan_speed);
+                        }
+                }
+
                 set_fan_speed(sensors, fan_speed);
+
+                if(verbose) {
+                        printf("Sleeping for %d seconds\n", polling_interval);
+                        if(daemonize) {
+                                syslog(LOG_INFO, "Sleeping for %d seconds\n", polling_interval);
+                        }
+                }
                 sleep(polling_interval);
-                printf("Old Temp %d: New Temp: %d, Fan Speed: %d\n", old_temp, new_temp, fan_speed);
-
         }
-
-        return 0;
 }

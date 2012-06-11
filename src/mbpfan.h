@@ -11,7 +11,6 @@ extern int low_temp;
 extern int high_temp;
 extern int max_temp;
 
-
 /** Temperature polling interval
  *  Default value was 10 (seconds)
  */
@@ -26,7 +25,7 @@ typedef struct s_sensors t_sensors;
  * Detect the sensors in /sys/devices/platform/coretemp.0/temp
  * Return a linked list of t_sensors (first temperature detected)
  */
-t_sensors *find_sensors();
+t_sensors *retrieve_sensors();
 
 /**
  * Given a linked list of t_sensors, refresh their detected
@@ -45,3 +44,8 @@ void find_fans(t_sensors *sensors);
  * Set them to manual control
  */
 void set_fans_man(t_sensors *sensors);
+
+/**
+ * Main Program
+ */
+void mbpfan();
