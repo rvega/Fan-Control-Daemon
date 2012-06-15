@@ -18,7 +18,7 @@
  *
  *  Notes:
  *    Assumes any number of processors and fans (max. 10)
- *    It Uses only the temperatures from the processors as input.
+ *    It uses only the temperatures from the processors as input.
  *    Requires coretemp and applesmc kernel modules to be loaded.
  *    Requires root use
  *

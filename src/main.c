@@ -1,3 +1,18 @@
+/**
+ *  Copyright (C) (2012) Daniel Graziotin <dgraziotin@task3.cc>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ */
+ 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -7,6 +22,9 @@
 
 int daemonize = 1;
 int verbose = 0;
+
+const char *program_name = "mbpfan";
+const char *program_pid = "/var/run/mbpfan.pid";
 
 void print_usage(int argc, char *argv[])
 {
@@ -44,7 +62,7 @@ int main(int argc, char *argv[])
         }
 
         // pointer to mbpfan() function in mbpfan.c
-        void (*function)() = mbpfan;
-        go_daemon(function);
+        void (*mbpfan)() = mbpfan;
+        go_daemon(mbpfan);
         exit(0);
 }

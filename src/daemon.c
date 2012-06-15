@@ -1,6 +1,19 @@
 /**
- * Credits: http://peterlombardo.wikidot.com/linux-daemon-in-c
+ *  Copyright (C) 2012  Peter Lombardo <http://peterlombardo.wikidot.com/linux-daemon-in-c>
+ *  Modifications (2012) by Daniel Graziotin <dgraziotin@task3.cc>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
  */
+
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -16,8 +29,33 @@
 #include "mbpfan.h"
 #include "global.h"
 
-#define DAEMON_NAME "mbpfan"
-#define PID_FILE "/var/run/mbpfan.pid"
+int write_pid(int pid){
+        FILE *file = NULL;
+        file = fopen(program_pid, "w");
+        if(file != NULL) {
+                fprintf(file, "%d", pid);
+                fclose(file);
+                return 1;
+        }else{
+                return 0;
+        }            
+}
+
+int read_pid(){
+        FILE *file = NULL;
+        int pid = -1;
+        file = fopen(program_pid, "r");
+        if(file != NULL) {
+                fscanf(file, "%d", &pid);
+                fclose(file);
+                return pid;
+        }
+        return -1;           
+}
+
+int delete_pid(){
+        return remove(program_pid);
+}
 
 
 void signal_handler(int signal)
@@ -27,15 +65,18 @@ void signal_handler(int signal)
         case SIGHUP:
                 //TODO: restart myself
                 syslog(LOG_WARNING, "Received SIGHUP signal.");
+                delete_pid();
                 exit(0);
                 break;
         case SIGTERM:
                 syslog(LOG_WARNING, "Received SIGTERM signal.");
+                delete_pid();
                 //TODO: free resources
                 exit(0);
                 break;
         case SIGINT:
                 syslog(LOG_WARNING, "Received SIGINT signal.");
+                delete_pid();
                 //TODO: free resources
                 exit(0);
         default:
@@ -44,8 +85,7 @@ void signal_handler(int signal)
         }
 }
 
-
-void go_daemon(void (*function)())
+void go_daemon(void (*mbpfan)())
 {
 
         // Setup signal handling before we start
@@ -53,36 +93,37 @@ void go_daemon(void (*function)())
         signal(SIGTERM, signal_handler);
         signal(SIGINT, signal_handler);
 
-        syslog(LOG_INFO, "%s starting up", DAEMON_NAME);
+        syslog(LOG_INFO, "%s starting up", program_name);
 
         // Setup syslog logging - see SETLOGMASK(3)
         if(verbose) {
                 setlogmask(LOG_UPTO(LOG_DEBUG));
-                openlog(DAEMON_NAME, LOG_CONS | LOG_NDELAY | LOG_PERROR | LOG_PID, LOG_USER);
+                openlog(program_name, LOG_CONS | LOG_NDELAY | LOG_PERROR | LOG_PID, LOG_USER);
         } else {
                 setlogmask(LOG_UPTO(LOG_INFO));
-                openlog(DAEMON_NAME, LOG_CONS, LOG_USER);
+                openlog(program_name, LOG_CONS, LOG_USER);
         }
 
 
-        pid_t pid;
-        pid_t sid;
+        pid_t pid_slave;
+        pid_t sid_slave;
 
         if (daemonize) {
 
-                pid = fork();
-                if (pid < 0) {
+                pid_slave = fork();
+                if (pid_slave < 0) {
                         exit(EXIT_FAILURE);
                 }
-                if (pid > 0) {
-                        exit(EXIT_SUCCESS);
+                if (pid_slave > 0) {
+                   // kill the father
+                   exit(EXIT_SUCCESS);
                 }
 
-                umask(0);
+                umask(0022);
 
-                // new SID for the child process
-                sid = setsid();
-                if (sid < 0) {
+                // new sid_slave for the child process
+                sid_slave = setsid();
+                if (sid_slave < 0) {
                         exit(EXIT_FAILURE);
                 }
 
@@ -90,17 +131,48 @@ void go_daemon(void (*function)())
                         exit(EXIT_FAILURE);
                 }
 
+
+
                 /* Close out the standard file descriptors */
                 close(STDIN_FILENO);
                 close(STDOUT_FILENO);
                 close(STDERR_FILENO);
         }
+        
 
+        int current_pid = getpid();
 
-        function();
+        if (read_pid() == -1){
+                if (verbose){
+                        printf("Writing a new .pid file with value %d at: %s", current_pid, program_pid);
+                        syslog(LOG_INFO, "Writing a new .pid file with value %d at: %s", current_pid, program_pid);
+                }
+                if (write_pid(current_pid) == 0){
+                        syslog(LOG_ERR, "Can not create a .pid file at: %s. Aborting", program_pid);  
+                        if (verbose){
+                                printf("ERROR: Can not create a .pid file at: %s. Aborting", program_pid);
+                        }     
+                     exit(EXIT_FAILURE);
+                }else{
+                        if (verbose){
+                                printf("Successfully written a new .pid file with value %d at: %s", current_pid, program_pid);   
+                                syslog(LOG_INFO, "Successfully written a new .pid file with value %d at: %s", current_pid, program_pid);   
+                        }
+                }
+        }else{
+                syslog(LOG_ERR, "A previously created .pid file exists at: %s. Aborting", program_pid);
+                if (verbose){
+                    printf("ERROR: a previously created .pid file exists at: %s.\n Aborting\n", program_pid);  
+                }
+                exit(EXIT_FAILURE);  
+        }
+        
 
-        if(daemonize)
-                syslog(LOG_INFO, "%s daemon exiting", DAEMON_NAME);
+        mbpfan();
+
+        if(daemonize){
+                syslog(LOG_INFO, "%s daemon exiting", program_name);
+        }
 
         return;
 }
