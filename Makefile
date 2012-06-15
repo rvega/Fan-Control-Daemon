@@ -54,6 +54,13 @@ clean:
 
 install:
 	cp $(EXE) /usr/sbin
+	@echo "-----------------------------------------------------------------------------"
+	@echo "An init file suitable for /lib/lsb/init-functions (Debian & Ubuntu fur sure)"
+	@echo "Is located in the main folder of the source files. It is called mbpfan.init."
+	@echo "Rename it to mbpfan, give it execution permissions (chmod +x mbpfan)"
+	@echo "and move it to /etc/init.d"
+	@echo "Then, add it to the default runlevels with sudo update-rc.d mbpfan defaults"
+	@echo "-----------------------------------------------------------------------------"
 
 rebuild: clean all
 #rebuild is not entirely correct

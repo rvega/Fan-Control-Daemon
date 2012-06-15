@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
         }
 
         // pointer to mbpfan() function in mbpfan.c
-        void (*mbpfan)() = mbpfan;
-        go_daemon(mbpfan);
+        void (*fan_control)() = mbpfan;
+        go_daemon(fan_control);
         exit(0);
 }

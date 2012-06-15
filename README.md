@@ -29,15 +29,28 @@ Install Instructions
 --------------------
 
 Install with
-   make install
+   sudo make install
 
-It actually copies mbpfan to /usr/sbin,
+It actually copies mbpfan to /usr/sbin.
+
+An init file suitable for /lib/lsb/init-functions (Debian & Ubuntu fur sure)
+Is located in the main folder of the source files. It is called mbpfan.init.
+Rename it to mbpfan, give it execution permissions (chmod +x mbpfan)
+and move it to /etc/init.d
+Then, add it to the default runlevels with sudo update-rc.d mbpfan defaults (Ubuntu example)
+
 
 Run Instructions
 ---------------------
 
-Run with
+If not installed, run with
 sudo bin/mbpfan
+
+If installed, manually run with
+sudo mbpfan
+
+If installed and using the init file, run with (Ubuntu example)
+sudo service mbpfan start
 
 
 License

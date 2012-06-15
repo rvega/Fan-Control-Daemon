@@ -85,7 +85,7 @@ void signal_handler(int signal)
         }
 }
 
-void go_daemon(void (*mbpfan)())
+void go_daemon(void (*fan_control)())
 {
 
         // Setup signal handling before we start
@@ -168,7 +168,7 @@ void go_daemon(void (*mbpfan)())
         }
         
 
-        mbpfan();
+        fan_control();
 
         if(daemonize){
                 syslog(LOG_INFO, "%s daemon exiting", program_name);

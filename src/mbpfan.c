@@ -52,7 +52,7 @@ int low_temp = 63;   // try ranges 55-63
 int high_temp = 66;  // try ranges 58-66
 int max_temp = 86;   // do not set it > 90
 
-int polling_interval = 5;
+int polling_interval = 7;
 
 
 struct s_sensors {
