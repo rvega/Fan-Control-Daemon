@@ -19,11 +19,19 @@ Compile Instructions
 ---------------------
 
 Compile with
-make
+   make
 
 Manually compile with
-gcc -o bin/mbpfan src/mbpfan.c -lm
+   gcc -o bin/mbpfan src/mbpfan.c -lm
 
+
+Install Instructions
+--------------------
+
+Install with
+   make install
+
+It actually copies mbpfan to /usr/sbin,
 
 Run Instructions
 ---------------------

@@ -52,5 +52,8 @@ all: $(OBJS)
 clean:
 	rm -rf $(SOURCE_PATH)*.$(OBJ) $(EXE)
 
+install:
+	cp $(EXE) /usr/sbin
+
 rebuild: clean all
 #rebuild is not entirely correct
