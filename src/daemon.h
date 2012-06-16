@@ -36,7 +36,7 @@ int read_pid();
  * Return TRUE on success
  * Return FALSE otherwise
  */
- int delete_pid();
+int delete_pid();
 
 /**
  * ...handles signals :-)

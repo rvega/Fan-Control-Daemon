@@ -24,6 +24,11 @@ Compile with
 Manually compile with
    gcc -o bin/mbpfan src/mbpfan.c -lm
 
+Run The Tests (Recommended)
+---------------------------
+
+It is recommended to run the tests before installing the program
+	sudo ./bin/mbpfan -t
 
 Install Instructions
 --------------------
