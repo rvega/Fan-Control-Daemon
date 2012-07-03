@@ -12,8 +12,8 @@ int tests_run = 0;
 struct s_sensors
 {
   char* path;
-  char* fan_min_path;
-  char* fan_man_path;
+  char* fan_output_path;
+  char* fan_manual_path;
   unsigned int temperature;
   struct s_sensors *next;
 };
@@ -44,7 +44,7 @@ static char *test_fan_paths()
   int found_fan_path = 0;
   while(tmp != NULL)
     {
-      if(tmp->fan_min_path != NULL)
+      if(tmp->fan_output_path != NULL)
         found_fan_path++;
       tmp = tmp->next;
     }

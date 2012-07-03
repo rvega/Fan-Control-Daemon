@@ -58,8 +58,8 @@ int polling_interval = 7;
 struct s_sensors
 {
   char* path;
-  char* fan_min_path;
-  char* fan_man_path;
+  char* fan_output_path;
+  char* fan_manual_path;
   unsigned int temperature;
   struct s_sensors *next;
 };
@@ -127,14 +127,14 @@ void find_fans(t_sensors* sensors)
 {
   t_sensors *tmp = sensors;
 
-  char *path_min = NULL;
-  char *path_man = NULL;
+  char *path_output = NULL;
+  char *path_manual = NULL;
 
   const char *path_begin = "/sys/devices/platform/applesmc.768/fan";
-  const char *path_min_end = "_min";
+  const char *path_output_end = "_output";
   const char *path_man_end = "_manual";
 
-  int path_min_size = strlen(path_begin) + strlen(path_min_end) + 2;
+  int path_min_size = strlen(path_begin) + strlen(path_output_end) + 2;
   int path_man_size = strlen(path_begin) + strlen(path_man_end) + 2;
   char number[1];
   sprintf(number,"%d",0);
@@ -144,32 +144,32 @@ void find_fans(t_sensors* sensors)
 
   for(n_sensors = 0; n_sensors<10; n_sensors++)
     {
-      path_min = (char*) malloc(sizeof( char ) * path_min_size);
-      path_min[0] = '\0';
-      path_man = (char*) malloc(sizeof( char ) * path_man_size);
-      path_man[0] = '\0';
+      path_output = (char*) malloc(sizeof( char ) * path_min_size);
+      path_output[0] = '\0';
+      path_manual = (char*) malloc(sizeof( char ) * path_man_size);
+      path_manual[0] = '\0';
       sprintf(number,"%d",n_sensors);
 
-      strncat( path_min, path_begin, strlen(path_begin) );
-      strncat( path_min, number, strlen(number) );
-      strncat( path_min, path_min_end, strlen(path_begin) );
+      strncat( path_output, path_begin, strlen(path_begin) );
+      strncat( path_output, number, strlen(number) );
+      strncat( path_output, path_output_end, strlen(path_begin) );
 
-      strncat( path_man, path_begin, strlen(path_begin) );
-      strncat( path_man, number, strlen(number) );
-      strncat( path_man, path_man_end, strlen(path_begin) );
+      strncat( path_manual, path_begin, strlen(path_begin) );
+      strncat( path_manual, number, strlen(number) );
+      strncat( path_manual, path_man_end, strlen(path_begin) );
 
 
-      FILE *file = fopen(path_min, "r");
+      FILE *file = fopen(path_output, "r");
 
       if(file != NULL)
         {
           if (tmp->path != NULL)
             {
-              tmp->fan_min_path = (char *) malloc(sizeof( char ) * path_min_size);
-              tmp->fan_man_path = (char *) malloc(sizeof( char ) * path_man_size);
+              tmp->fan_output_path = (char *) malloc(sizeof( char ) * path_min_size);
+              tmp->fan_manual_path = (char *) malloc(sizeof( char ) * path_man_size);
             }
-          strcpy(tmp->fan_min_path, path_min);
-          strcpy(tmp->fan_man_path, path_man);
+          strcpy(tmp->fan_output_path, path_output);
+          strcpy(tmp->fan_manual_path, path_manual);
           tmp = tmp->next;
           n_fans++;
           fclose(file);
@@ -185,10 +185,10 @@ void find_fans(t_sensors* sensors)
         }
     }
 
-  free(path_min);
-  path_min = NULL;
-  free(path_man);
-  path_man = NULL;
+  free(path_output);
+  path_output = NULL;
+  free(path_manual);
+  path_manual = NULL;
 }
 
 void set_fans_man(t_sensors *sensors)
@@ -198,10 +198,10 @@ void set_fans_man(t_sensors *sensors)
   FILE *file;
   while(tmp != NULL)
     {
-      file = fopen(tmp->fan_man_path, "rw+");
+      file = fopen(tmp->fan_manual_path, "rw+");
       if(file != NULL)
         {
-          fprintf(file, "%d", 0);
+          fprintf(file, "%d", 1);
           fclose(file);
         }
       tmp = tmp->next;
@@ -237,7 +237,7 @@ void set_fan_speed(t_sensors* sensors, int speed)
   FILE *file;
   while(tmp != NULL)
     {
-      file = fopen(tmp->fan_min_path, "rw+");
+      file = fopen(tmp->fan_output_path, "rw+");
       if(file != NULL)
         {
           fprintf(file, "%d", speed);
