@@ -39,11 +39,13 @@ Install with
 It actually copies mbpfan to /usr/sbin.
 
 An init file suitable for /lib/lsb/init-functions (Debian & Ubuntu fur sure)
-Is located in the main folder of the source files. It is called mbpfan.init.
+is located in the main folder of the source files. It is called mbpfan.init.debian
 Rename it to mbpfan, give it execution permissions (chmod +x mbpfan)
 and move it to /etc/init.d
 Then, add it to the default runlevels with sudo update-rc.d mbpfan defaults (Ubuntu example)
 
+An init file suitable for Fedora (and probably RedHat) can be found
+in the file mbpfan.init.fedora
 
 Run Instructions
 ---------------------
