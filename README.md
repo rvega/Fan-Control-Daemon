@@ -13,6 +13,8 @@ This enhanced version assumes any number of processors and fans (max. 10).
 *  It only uses the temperatures from the processors as input.
 *  It requires coretemp and applesmc kernel modules to be loaded.
 *  It requires root use
+*  It daemonizes or stays in foreground
+*  Verbose mode for both syslog and stdout
 
 
 Compile Instructions
@@ -58,6 +60,15 @@ sudo mbpfan
 
 If installed and using the init file, run with (Ubuntu example)
 sudo service mbpfan start
+
+Usage
+-------
+
+Usage: ./mbpfan OPTION(S)
+-h Show the help screen
+-f Run in foreground
+-t Run the tests
+-v Be (a lot) verbose
 
 
 License
