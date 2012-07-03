@@ -251,7 +251,6 @@ void set_fan_speed(t_sensors* sensors, int speed)
 
 
 
-/* Returns average CPU temp in degrees (ceiling) */
 unsigned short get_temp(t_sensors* sensors)
 {
   sensors = refresh_sensors(sensors);

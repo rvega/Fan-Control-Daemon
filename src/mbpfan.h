@@ -62,6 +62,12 @@ void find_fans(t_sensors *sensors);
 void set_fans_man(t_sensors *sensors);
 
 /**
+ * Given a list of sensors with associated fans
+ * Change their speed
+ */
+void set_fan_speed(t_sensors* sensors, int speed)
+
+/**
  *  Return average CPU temp in degrees (ceiling)
  */
 unsigned short get_temp(t_sensors* sensors);
@@ -70,3 +76,6 @@ unsigned short get_temp(t_sensors* sensors);
  * Main Program
  */
 void mbpfan();
+
+
+
