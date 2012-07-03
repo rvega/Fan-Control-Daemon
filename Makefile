@@ -42,6 +42,7 @@ endif
 OBJS := $(patsubst %.$(C),%.$(OBJ),$(wildcard $(SOURCE_PATH)*.$(C)))
 
 %.$(OBJ):%.$(C)
+	mkdir -p bin
 	@echo Compiling $(basename $<)...
 	$(CCMD) -c $(CPPFLAGS) $(CXXFLAGS) $< $(OBJFLAG)$@
 
