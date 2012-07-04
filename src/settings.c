@@ -50,7 +50,6 @@
 
 typedef struct Section Section;
 typedef struct ParseState ParseState;
-typedef enum ConvertMode ConvertMode;
 
 struct Settings {
 	Section *sections;
@@ -74,6 +73,8 @@ enum ConvertMode {
 	CONVERT_MODE_DOUBLE,
 };
 
+typedef enum ConvertMode ConvertMode;
+
 static void trim_str(const char *str, char *out_buf);
 static int parse_str(Settings *settings, char *str, ParseState *parse_state);
 static int is_blank_char(char c);
@@ -95,7 +96,7 @@ Settings * settings_new()
 {
 	Settings *settings;
 
-	settings = malloc(sizeof(Settings));
+	settings = (Settings*)malloc(sizeof(Settings));
 	if (settings == NULL) {
 		return NULL;
 	}
@@ -257,7 +258,7 @@ int settings_set(Settings *settings, const char *section, const char *key, const
 	s = get_section(settings->sections, settings->section_count, section);
 	if (s == NULL) {
 		/* The section is not created---create it */
-		s = realloc(settings->sections, (settings->section_count + 1) * sizeof(Section));
+		s = (Section*)realloc(settings->sections, (settings->section_count + 1) * sizeof(Section));
 		if (s == NULL) {
 			return 0;
 		}
@@ -269,7 +270,7 @@ int settings_set(Settings *settings, const char *section, const char *key, const
 			free(s);
 			return 0;
 		}
-		s->name = malloc((strlen(section) + 1) * sizeof(char));
+		s->name = (char*)malloc((strlen(section) + 1) * sizeof(char));
 		if (s->name == NULL) {
 			sm_delete(s->map);
 			free(s);
