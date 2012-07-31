@@ -4,7 +4,7 @@ Fan-Control-Daemon
 Introduction
 ---------------------
 
-This is an enhanced version of [rvega's Fan-Control-Daemon](https://github.com/rvega/Fan-Control-Daemon),
+This is an enhanced version of [CeRiAl's Fan-Control-Daemon](https://github.com/CeRiAl/Fan-Control-Daemon), which itself is an enhanced version of [rvega's Fan-Control-Daemon](https://github.com/rvega/Fan-Control-Daemon),
 which itself is an enhanced version of [Allan McRae mbpfan](http://allanmcrae.com/2010/05/simple-macbook-pro-fan-daemon/)
 
 Fan-Control-Daemon is a daemon that uses input from coretemp module and sets the fan speed using the applesmc module. 
@@ -48,6 +48,10 @@ Then, add it to the default runlevels with sudo update-rc.d mbpfan defaults (Ubu
 
 An init file suitable for Fedora (and probably RedHat) can be found
 in the file mbpfan.init.fedora
+
+An init file is available for gentoo users: mbpfan.init.gentoo
+To install, run # cp mbpfan.init.gentoo /etc/init.d/mbpfan
+To automatically run mbpfan at boot, run # rc-update add mbpfan default
 
 Run Instructions
 ---------------------
