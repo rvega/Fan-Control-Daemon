@@ -79,6 +79,10 @@ install:
 	@echo "systemctl start mbpfan.service"
 	@echo "To start the service automatically at boot, also execute the following:"
 	@echo "systemctl enable mbpfan.service"
+	@echo ""
+	@echo "An init file is available for gentoo users: mbpfan.init.gentoo"
+	@echo "To install, run # cp mbpfan.init.gentoo /etc/init.d/mbpfan"
+	@echo "To automatically run mbpfan at boot, run # rc-update add mbpfan default"
 	@echo "-----------------------------------------------------------------------------"
 
 rebuild: clean all
