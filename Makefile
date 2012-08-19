@@ -57,7 +57,7 @@ install:
 	cp $(EXE) /usr/sbin
 	@echo "-----------------------------------------------------------------------------"
 	@echo "An init file suitable for /lib/lsb/init-functions (Debian) is located in"
-	@echo "in the main folder of the source files. It is called mbpfan.init."
+	@echo "in the main folder of the source files. It is called mbpfan.init.debian"
 	@echo "Rename it to mbpfan, give it execution permissions (chmod +x mbpfan)"
 	@echo "and move it to /etc/init.d"
 	@echo "Then, add it to the default runlevels with sudo update-rc.d mbpfan defaults"
