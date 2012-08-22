@@ -54,37 +54,24 @@ all: $(OBJS)
 clean:
 	rm -rf $(SOURCE_PATH)*.$(OBJ) $(EXE)
 
+tests:
+	make install
+	sudo /usr/sbin/mbpfan -f -v -t
+
 install:
+	make
 	cp $(EXE) /usr/sbin
 	cp -n $(CONF) /etc
-	@echo "-----------------------------------------------------------------------------"
-	@echo "An init file suitable for /lib/lsb/init-functions (Debian & Ubuntu for sure)"
-	@echo "is located in the main folder of the source files, called mbpfan.init.debian"
-	@echo "Rename it to mbpfan, give it execution permissions (chmod +x mbpfan)"
-	@echo "and move it to /etc/init.d"
-	@echo "Then, add it to the default runlevels with sudo update-rc.d mbpfan defaults"
 	@echo ""
-	@echo "Additionally, an init file suitable for /etc/rc.d/init.d/functions"
-	@echo "(RHEL/CentOS & Fedora) is also located at the same place, this file is called"
-	@echo "mbpfan.init.redhat. Also rename it to mbpfan, give it execution permissions"
-	@echo "and move it to /etc/init.d"
-	@echo "To add the script to the default runlevels, run the following as root:"
-	@echo "chkconfig --level 2345 mbpfan on && chkconfig --level 016 mbpfan off"
+	@echo "******************"
+	@echo "INSTALL COMPLETED"
+	@echo "******************"
 	@echo ""
-	@echo "For upstart based init systems (Ubuntu), an example upstart job has been"
-	@echo "provided for use in place of the LSB-style init script. To use, execute"
-	@echo "as root:"
-	@echo "cp mbpfan.upstart /etc/init/mbpfan.conf"
-	@echo "start mbpfan"
-	@echo "As a special bonus, a service file for systemd is also included. To use it,"
-	@echo "execute the following as root:"
-	@echo "cp mbpfan.service /usr/lib/systemd/system"
-	@echo "ln -s /usr/lib/systemd/system/mbpfan.service /etc/systemd/system/mbpfan.service"
-	@echo "systemctl daemon-reload"
-	@echo "systemctl start mbpfan.service"
-	@echo "To start the service automatically at boot, also execute the following:"
-	@echo "systemctl enable mbpfan.service"
-	@echo "-----------------------------------------------------------------------------"
-
+	@echo "A configuration file has been copied to /etc/mbpfan.conf"
+	@echo "See README.md file to have mbpfan automatically started at system boot."
+	@echo ""
+	@echo "Please run the tests now with the command"
+	@echo "   sudo make tests"
+	@echo ""
 rebuild: clean all
 #rebuild is not entirely correct

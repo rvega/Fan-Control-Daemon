@@ -29,15 +29,14 @@ const char *program_pid = "/var/run/mbpfan.pid";
 
 void print_usage(int argc, char *argv[])
 {
-  if (argc >=1)
-    {
-      printf("Usage: %s OPTION(S) \n", argv[0]);
-      printf("Options:\n");
-      printf("\t-h Show this help screen\n");
-      printf("\t-f Run in foreground\n");
-      printf("\t-t Run the tests\n");
-      printf("\t-v Be (a lot) verbose\n");
-      printf("\n");
+    if (argc >=1) {
+        printf("Usage: %s OPTION(S) \n", argv[0]);
+        printf("Options:\n");
+        printf("\t-h Show this help screen\n");
+        printf("\t-f Run in foreground\n");
+        printf("\t-t Run the tests\n");
+        printf("\t-v Be (a lot) verbose\n");
+        printf("\n");
     }
 }
 
@@ -46,34 +45,32 @@ void print_usage(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
 
-  int c;
-  while( (c = getopt(argc, argv, "hftv|help")) != -1)
-    {
-      switch(c)
-        {
+    int c;
+    while( (c = getopt(argc, argv, "hftv|help")) != -1) {
+        switch(c) {
         case 'h':
-          print_usage(argc, argv);
-          exit(0);
-          break;
+            print_usage(argc, argv);
+            exit(0);
+            break;
         case 'f':
-          daemonize = 0;
-          break;
+            daemonize = 0;
+            break;
         case 't':
-          tests();
-          exit(0);
-          break;
+            tests();
+            exit(0);
+            break;
         case 'v':
-          verbose = 1;
-          break;
+            verbose = 1;
+            break;
         default:
-          print_usage(argc, argv);
-          exit(0);
-          break;
+            print_usage(argc, argv);
+            exit(0);
+            break;
         }
     }
 
-  // pointer to mbpfan() function in mbpfan.c
-  void (*fan_control)() = mbpfan;
-  go_daemon(fan_control);
-  exit(0);
+    // pointer to mbpfan() function in mbpfan.c
+    void (*fan_control)() = mbpfan;
+    go_daemon(fan_control);
+    exit(0);
 }

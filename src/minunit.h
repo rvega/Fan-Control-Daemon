@@ -10,6 +10,7 @@ extern int tests_run;
 static char *test_sensor_paths();
 static char *test_fan_paths();
 static char *test_get_temp();
+static char *test_config_file();
 
 static char *all_tests();
 

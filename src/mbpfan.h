@@ -38,6 +38,13 @@ struct s_sensors;
 typedef struct s_sensors t_sensors;
 
 /**
+ * Tries to use the settings located in
+ * /etc/mbpfan.conf
+ * If it fails, the default hardcoded settings are used
+ */
+void retrieve_settings();
+
+/**
  * Detect the sensors in /sys/devices/platform/coretemp.0/temp
  * Return a linked list of t_sensors (first temperature detected)
  */
