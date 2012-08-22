@@ -135,15 +135,16 @@ void find_fans(t_sensors* sensors)
     char number[2];
     sprintf(number,"%d",0);
 
+    int counter = 0;
     int n_sensors = 0;
     int n_fans = 0;
 
-    for(n_sensors = 0; n_sensors<10; n_sensors++) {
+    for(counter = 0; counter<10; counter++) {
         path_output = (char*) malloc(sizeof( char ) * path_min_size);
         path_output[0] = '\0';
         path_manual = (char*) malloc(sizeof( char ) * path_man_size);
         path_manual[0] = '\0';
-        sprintf(number,"%d",n_sensors);
+        sprintf(number,"%d",counter);
 
         strncat( path_output, path_begin, strlen(path_begin) );
         strncat( path_output, number, strlen(number) );
@@ -165,14 +166,15 @@ void find_fans(t_sensors* sensors)
             strcpy(tmp->fan_manual_path, path_manual);
             tmp = tmp->next;
             n_fans++;
+            n_sensors++;
             fclose(file);
         }
     }
 
     if(verbose) {
-        printf("Found %d: sensors and %d fans\n", n_sensors, n_fans);
+        printf("Found %d sensors and %d fans\n", n_sensors, n_fans);
         if(daemonize) {
-            syslog(LOG_INFO, "Found %d: sensors and %d fans", n_sensors, n_fans);
+            syslog(LOG_INFO, "Found %d sensors and %d fans", n_sensors, n_fans);
         }
     }
 
