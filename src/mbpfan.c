@@ -78,7 +78,7 @@ t_sensors *retrieve_sensors()
     const char *path_end = "_input";
 
     int path_size = strlen(path_begin) + strlen(path_end) + 2;
-    char number[1];
+    char number[2];
     sprintf(number,"%d",0);
 
     int i = 0;
@@ -132,7 +132,7 @@ void find_fans(t_sensors* sensors)
 
     int path_min_size = strlen(path_begin) + strlen(path_output_end) + 2;
     int path_man_size = strlen(path_begin) + strlen(path_man_end) + 2;
-    char number[1];
+    char number[2];
     sprintf(number,"%d",0);
 
     int n_sensors = 0;

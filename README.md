@@ -56,32 +56,38 @@ sudo service mbpfan start
 
 Starting at boot
 ----------------
-An init file suitable for /lib/lsb/init-functions (Debian & Ubuntu for sure)
+**Ubuntu**
+For upstart based init systems (Ubuntu), an example upstart job has been
+provided for use in place of the LSB-style init script. 
+To use, execute:
+	sudo cp mbpfan.upstart /etc/init/mbpfan.conf
+	sudo start mbpfan
+
+**Debian**
+An init file suitable for /lib/lsb/init-functions (Debian) 
 is located in the main folder of the source files, called mbpfan.init.debian
 Rename it to mbpfan, give it execution permissions (chmod +x mbpfan)
 and move it to /etc/init.d
 Then, add it to the default runlevels with sudo update-rc.d mbpfan defaults
 
-Additionally, an init file suitable for /etc/rc.d/init.d/functions
+**Redhat, CentOS, Fedora**
+An init file suitable for /etc/rc.d/init.d/functions
 (RHEL/CentOS & Fedora) is also located at the same place, this file is called
 mbpfan.init.redhat. Also rename it to mbpfan, give it execution permissions
 and move it to /etc/init.d
 To add the script to the default runlevels, run the following as root:
 chkconfig --level 2345 mbpfan on && chkconfig --level 016 mbpfan off
 
-For upstart based init systems (Ubuntu), an example upstart job has been
-provided for use in place of the LSB-style init script. To use, execute
-as root:
-cp mbpfan.upstart /etc/init/mbpfan.conf
-start mbpfan
+**systemd**
 As a special bonus, a service file for systemd is also included. To use it,
 execute the following as root:
-cp mbpfan.service /usr/lib/systemd/system
-ln -s /usr/lib/systemd/system/mbpfan.service /etc/systemd/system/mbpfan.service
-systemctl daemon-reload
-systemctl start mbpfan.service
+sudo cp mbpfan.service /usr/lib/systemd/system
+sudo ln -s /usr/lib/systemd/system/mbpfan.service /etc/systemd/system/mbpfan.service
+sudo systemctl daemon-reload
+sudo systemctl start mbpfan.service
+
 To start the service automatically at boot, also execute the following:
-systemctl enable mbpfan.service
+sudo systemctl enable mbpfan.service
 
 
 Usage

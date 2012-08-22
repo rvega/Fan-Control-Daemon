@@ -58,6 +58,10 @@ tests:
 	make install
 	sudo /usr/sbin/mbpfan -f -v -t
 
+uninstall:
+	rm /usr/sbin/mbpfan
+	rm /etc/mbpfan.conf
+
 install:
 	make
 	cp $(EXE) /usr/sbin
