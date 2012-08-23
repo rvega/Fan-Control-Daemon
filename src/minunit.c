@@ -10,16 +10,6 @@
 int tests_run = 0;
 
 
-struct s_sensors {
-    char* path;
-    char* fan_output_path;
-    char* fan_manual_path;
-    unsigned int temperature;
-    struct s_sensors *next;
-};
-typedef s_sensors t_sensors;
-
-
 static char *test_sensor_paths()
 {
     t_sensors* sensors = retrieve_sensors();

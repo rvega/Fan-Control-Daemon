@@ -5,6 +5,16 @@
 #define mu_run_test(test) do { char *message = test(); tests_run++; \
                                 if (message) return message; } while (0)
 
+struct s_sensors {
+    char* path;
+    char* fan_output_path;
+    char* fan_manual_path;
+    unsigned int temperature;
+    struct s_sensors *next;
+};
+typedef s_sensors t_sensors;
+
+
 extern int tests_run;
 
 static char *test_sensor_paths();
