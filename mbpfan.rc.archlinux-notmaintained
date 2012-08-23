@@ -1,6 +1,7 @@
 #!/bin/bash
-
-# not maintained in this proejct
+# Archlinux rc script
+# not maintained in this project
+# please, fix it and contribute back to the project
 
 daemon_name=mbpfan
 

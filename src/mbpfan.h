@@ -14,6 +14,9 @@
  *
  */
 
+#ifndef _MBPFAN_H_
+#define _MBPFAN_H_
+
 /** Basic fan speed parameters
  */
 extern int min_fan_speed;
@@ -83,3 +86,5 @@ unsigned short get_temp(t_sensors* sensors);
  * Main Program
  */
 void mbpfan();
+
+#endif

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <limits.h>
+#include "global.h"
 #include "mbpfan.h"
 #include "settings.h"
 #include "minunit.h"
@@ -10,32 +11,41 @@
 int tests_run = 0;
 
 
-static char *test_sensor_paths()
+static const char *test_sensor_paths()
 {
     t_sensors* sensors = retrieve_sensors();
     mu_assert("No sensors found", sensors != NULL);
     t_sensors* tmp = sensors;
+
     while(tmp != NULL) {
         mu_assert("Sensor does not have a valid path", tmp->path != NULL);
-        if(tmp->path != NULL)
+
+        if(tmp->path != NULL) {
             mu_assert("Sensor does not have valid temperature", tmp->temperature > 0);
+        }
+
         tmp = tmp->next;
     }
+
     return 0;
 }
 
 
-static char *test_fan_paths()
+static const char *test_fan_paths()
 {
     t_sensors* sensors = retrieve_sensors();
     mu_assert("No sensors found", sensors != NULL);
     t_sensors* tmp = sensors;
     int found_fan_path = 0;
+
     while(tmp != NULL) {
-        if(tmp->fan_output_path != NULL)
+        if(tmp->fan_output_path != NULL) {
             found_fan_path++;
+        }
+
         tmp = tmp->next;
     }
+
     mu_assert("No fans found", found_fan_path != 0);
     return 0;
 }
@@ -46,8 +56,11 @@ unsigned time_seed()
     unsigned char *p = (unsigned char *)&now;
     unsigned seed = 0;
     size_t i;
-    for ( i = 0; i < sizeof now; i++ )
+
+    for ( i = 0; i < sizeof now; i++ ) {
         seed = seed * ( UCHAR_MAX + 2U ) + p[i];
+    }
+
     return seed;
 }
 
@@ -56,17 +69,19 @@ unsigned time_seed()
 int stress(int n)
 {
     int f = n;
+
     while (f > 0) {
         while(n > 0) {
             srand ( time_seed() );
             n--;
         }
+
         f--;
         n = f;
     }
 }
 
-static char *test_get_temp()
+static const char *test_get_temp()
 {
     t_sensors* sensors = retrieve_sensors();
     mu_assert("No sensors found", sensors != NULL);
@@ -78,21 +93,24 @@ static char *test_get_temp()
     return 0;
 }
 
-static char *test_config_file()
+static const char *test_config_file()
 {
     FILE *f = NULL;
     Settings *settings = NULL;
     f = fopen("/etc/mbpfan.conf", "r");
     mu_assert("No config file found", f != NULL);
 
-    if (f == NULL)
+    if (f == NULL) {
         return 0;
+    }
 
     settings = settings_open(f);
     fclose(f);
     mu_assert("Could not read settings from config file", settings != NULL);
-    if (settings == NULL)
+
+    if (settings == NULL) {
         return 0;
+    }
 
     mu_assert("Could not read min_fan_speed from config file",settings_get_int(settings, "general", "min_fan_speed") != 0);
     mu_assert("Could not read max_fan_speed from config file",settings_get_int(settings, "general", "max_fan_speed") != 0);
@@ -107,7 +125,7 @@ static char *test_config_file()
 }
 
 
-static char *all_tests()
+static const char *all_tests()
 {
     mu_run_test(test_sensor_paths);
     mu_run_test(test_fan_paths);
@@ -120,12 +138,15 @@ int tests()
 {
     printf("Starting the tests..\n");
     printf("It is normal for them to take a bit to finish.\n");
-    char *result = all_tests();
+    const char *result = all_tests();
+
     if (result != 0) {
         printf("%s \n", result);
+
     } else {
         printf("ALL TESTS PASSED\n");
     }
+
     printf("Tests run: %d\n", tests_run);
 
     return result != 0;

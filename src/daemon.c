@@ -34,10 +34,12 @@ int write_pid(int pid)
 {
     FILE *file = NULL;
     file = fopen(program_pid, "w");
+
     if(file != NULL) {
         fprintf(file, "%d", pid);
         fclose(file);
         return 1;
+
     } else {
         return 0;
     }
@@ -48,11 +50,13 @@ int read_pid()
     FILE *file = NULL;
     int pid = -1;
     file = fopen(program_pid, "r");
+
     if(file != NULL) {
         fscanf(file, "%d", &pid);
         fclose(file);
         return pid;
     }
+
     return -1;
 }
 
@@ -103,6 +107,7 @@ void go_daemon(void (*fan_control)())
     if(verbose) {
         setlogmask(LOG_UPTO(LOG_DEBUG));
         openlog(program_name, LOG_CONS | LOG_NDELAY | LOG_PERROR | LOG_PID, LOG_USER);
+
     } else {
         setlogmask(LOG_UPTO(LOG_INFO));
         openlog(program_name, LOG_CONS, LOG_USER);
@@ -115,9 +120,11 @@ void go_daemon(void (*fan_control)())
     if (daemonize) {
 
         pid_slave = fork();
+
         if (pid_slave < 0) {
             exit(EXIT_FAILURE);
         }
+
         if (pid_slave > 0) {
             // kill the father
             exit(EXIT_SUCCESS);
@@ -127,6 +134,7 @@ void go_daemon(void (*fan_control)())
 
         // new sid_slave for the child process
         sid_slave = setsid();
+
         if (sid_slave < 0) {
             exit(EXIT_FAILURE);
         }
@@ -151,23 +159,30 @@ void go_daemon(void (*fan_control)())
             printf("Writing a new .pid file with value %d at: %s\n", current_pid, program_pid);
             syslog(LOG_INFO, "Writing a new .pid file with value %d at: %s", current_pid, program_pid);
         }
+
         if (write_pid(current_pid) == 0) {
             syslog(LOG_ERR, "Can not create a .pid file at: %s. Aborting", program_pid);
+
             if (verbose) {
                 printf("ERROR: Can not create a .pid file at: %s. Aborting\n", program_pid);
             }
+
             exit(EXIT_FAILURE);
+
         } else {
             if (verbose) {
                 printf("Successfully written a new .pid file with value %d at: %s\n", current_pid, program_pid);
                 syslog(LOG_INFO, "Successfully written a new .pid file with value %d at: %s", current_pid, program_pid);
             }
         }
+
     } else {
         syslog(LOG_ERR, "A previously created .pid file exists at: %s. Aborting", program_pid);
+
         if (verbose) {
             printf("ERROR: a previously created .pid file exists at: %s.\n Aborting\n", program_pid);
         }
+
         exit(EXIT_FAILURE);
     }
 

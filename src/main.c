@@ -13,6 +13,10 @@
  *
  */
 
+/**
+ * Code formatted with astyle -A3 -s --break-blocks=all --add-brackets *.c *.h
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -46,6 +50,7 @@ int main(int argc, char *argv[])
 {
 
     int c;
+
     while( (c = getopt(argc, argv, "hftv|help")) != -1) {
         switch(c) {
         case 'h':

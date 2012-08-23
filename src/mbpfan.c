@@ -57,7 +57,7 @@ int max_temp = 86;   // do not set it > 90
 
 int polling_interval = 7;
 
-
+/*
 struct s_sensors {
     char* path;
     char* fan_output_path;
@@ -65,6 +65,9 @@ struct s_sensors {
     unsigned int temperature;
     struct s_sensors *next;
 };
+ */
+
+typedef struct s_sensors t_sensors;
 
 
 t_sensors *retrieve_sensors()
@@ -82,6 +85,7 @@ t_sensors *retrieve_sensors()
     sprintf(number,"%d",0);
 
     int i = 0;
+
     for(i = 0; i<10; i++) {
         path = (char*) malloc(sizeof( char ) * path_size);
 
@@ -98,24 +102,33 @@ t_sensors *retrieve_sensors()
             s->path = (char *) malloc(sizeof( char ) * path_size);
             strcpy(s->path, path);
             fscanf(file, "%d", &s->temperature);
+
             if (sensors_head == NULL) {
                 sensors_head = s;
                 sensors_head->next = NULL;
+
             } else {
                 t_sensors *tmp = sensors_head;
+
                 while (tmp->next != NULL) {
                     tmp = tmp->next;
                 }
+
                 tmp->next = s;
                 tmp->next->next = NULL;
             }
+
             fclose(file);
         }
+
         free(path);
         path = NULL;
     }
-    if(sensors_head != NULL)
+
+    if(sensors_head != NULL) {
         find_fans(sensors_head);
+    }
+
     return sensors_head;
 }
 
@@ -162,6 +175,7 @@ void find_fans(t_sensors* sensors)
                 tmp->fan_output_path = (char *) malloc(sizeof( char ) * path_min_size);
                 tmp->fan_manual_path = (char *) malloc(sizeof( char ) * path_man_size);
             }
+
             strcpy(tmp->fan_output_path, path_output);
             strcpy(tmp->fan_manual_path, path_manual);
             tmp = tmp->next;
@@ -173,6 +187,7 @@ void find_fans(t_sensors* sensors)
 
     if(verbose) {
         printf("Found %d sensors and %d fans\n", n_sensors, n_fans);
+
         if(daemonize) {
             syslog(LOG_INFO, "Found %d sensors and %d fans", n_sensors, n_fans);
         }
@@ -189,12 +204,15 @@ void set_fans_man(t_sensors *sensors)
 
     t_sensors *tmp = sensors;
     FILE *file;
+
     while(tmp != NULL) {
         file = fopen(tmp->fan_manual_path, "rw+");
+
         if(file != NULL) {
             fprintf(file, "%d", 1);
             fclose(file);
         }
+
         tmp = tmp->next;
     }
 }
@@ -214,6 +232,7 @@ t_sensors *refresh_sensors(t_sensors *sensors)
 
         tmp = tmp->next;
     }
+
     return sensors;
 }
 
@@ -223,8 +242,10 @@ void set_fan_speed(t_sensors* sensors, int speed)
 {
     t_sensors *tmp = sensors;
     FILE *file;
+
     while(tmp != NULL) {
         file = fopen(tmp->fan_output_path, "rw+");
+
         if(file != NULL) {
             fprintf(file, "%d", speed);
             fclose(file);
@@ -243,10 +264,12 @@ unsigned short get_temp(t_sensors* sensors)
     unsigned short temp = 0;
 
     t_sensors* tmp = sensors;
+
     while(tmp != NULL) {
         sum_temp += tmp->temperature;
         tmp = tmp->next;
     }
+
     temp = (unsigned short)( ceil( (float)( sum_temp ) / 2000. ) );
     return temp;
 }
@@ -262,35 +285,63 @@ void retrieve_settings()
         /* Could not open configfile */
         if(verbose) {
             printf("Couldn't open configfile, using defaults\n");
+
             if(daemonize) {
                 syslog(LOG_INFO, "Couldn't open configfile, using defaults");
             }
         }
+
     } else {
         settings = settings_open(f);
         fclose(f);
+
         if (settings == NULL) {
             /* Could not read configfile */
             if(verbose) {
                 printf("Couldn't read configfile\n");
+
                 if(daemonize) {
                     syslog(LOG_INFO, "Couldn't read configfile");
                 }
             }
+
         } else {
             /* Read configfile values */
             result = settings_get_int(settings, "general", "min_fan_speed");
-            if (result != 0) min_fan_speed = result;
+
+            if (result != 0) {
+                min_fan_speed = result;
+            }
+
             result = settings_get_int(settings, "general", "max_fan_speed");
-            if (result != 0) max_fan_speed = result;
+
+            if (result != 0) {
+                max_fan_speed = result;
+            }
+
             result = settings_get_int(settings, "general", "low_temp");
-            if (result != 0) low_temp = result;
+
+            if (result != 0) {
+                low_temp = result;
+            }
+
             result = settings_get_int(settings, "general", "high_temp");
-            if (result != 0) high_temp = result;
+
+            if (result != 0) {
+                high_temp = result;
+            }
+
             result = settings_get_int(settings, "general", "max_temp");
-            if (result != 0) max_temp = result;
+
+            if (result != 0) {
+                max_temp = result;
+            }
+
             result = settings_get_int(settings, "general", "polling_interval");
-            if (result != 0) polling_interval = result;
+
+            if (result != 0) {
+                polling_interval = result;
+            }
 
             /* Destroy the settings object */
             settings_delete(settings);
@@ -316,10 +367,12 @@ void mbpfan()
 
     if(verbose) {
         printf("Sleeping for %d seconds\n", polling_interval);
+
         if(daemonize) {
             syslog(LOG_INFO, "Sleeping for %d seconds", polling_interval);
         }
     }
+
     sleep(polling_interval);
 
     step_up = (float)( max_fan_speed - min_fan_speed ) /
@@ -354,6 +407,7 @@ void mbpfan()
 
         if(verbose) {
             printf("Old Temp %d: New Temp: %d, Fan Speed: %d\n", old_temp, new_temp, fan_speed);
+
             if(daemonize) {
                 syslog(LOG_INFO, "Old Temp %d: New Temp: %d, Fan Speed: %d", old_temp, new_temp, fan_speed);
             }
@@ -363,10 +417,12 @@ void mbpfan()
 
         if(verbose) {
             printf("Sleeping for %d seconds\n", polling_interval);
+
             if(daemonize) {
                 syslog(LOG_INFO, "Sleeping for %d seconds", polling_interval);
             }
         }
+
         sleep(polling_interval);
     }
 }

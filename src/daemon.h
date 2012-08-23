@@ -13,6 +13,8 @@
  *
  */
 
+#ifndef _DAEMON_H_
+#define _DAEMON_H_
 
 /**
  * Write the PID of the forked daemon to the
@@ -48,3 +50,5 @@ void signal_handler(int signal);
  * Daemonizes
  */
 int go_daemon(void (*function)());
+
+#endif
