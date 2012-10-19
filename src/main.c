@@ -75,11 +75,37 @@ int main(int argc, char *argv[])
         }
     }
 
+    /**
+     * Check for root
+     */
+
     uid_t uid=getuid(), euid=geteuid();
-    if (!(uid<0 || uid!=euid)) {
-        syslog(LOG_INFO, "Mbpfan not started with root privileges. Exiting.");
-        printf("Mbpfan not started with root privileges. Exiting.\n");
+
+    if (uid != 0 || euid != 0) {
+        syslog(LOG_INFO, "Mbpfan needs root privileges. Please run mbpfan as root. Exiting.");
+        printf("Mbpfan not started with root privileges. Please run mbpfan as root. Exiting.\n");
         exit(0);
+    }
+
+    /**
+     * Check for coretemp and applesmc modules
+     * Credits: http://stackoverflow.com/questions/12978794
+     */
+
+    FILE *fd = popen("lsmod | grep coretemp", "r");
+
+    char buf[16];
+
+    if (!(fread (buf, 1, sizeof (buf), fd) > 0)) {
+        syslog(LOG_INFO, "Mbpfan needs coretemp module. Please load it and run mbpfan again. Exiting.");
+        printf("Mbpfan needs coretemp module. Please load it and run mbpfan again. Exiting.\n");
+    }
+
+    fd = popen("lsmod | grep applesmc", "r");
+
+    if (!(fread (buf, 1, sizeof (buf), fd) > 0)) {
+        syslog(LOG_INFO, "Mbpfan needs applesmc module. Please load it and run mbpfan again. Exiting.");
+        printf("Mbpfan needs applescm module. Please load it and run mbpfan again. Exiting.\n");
     }
 
     // pointer to mbpfan() function in mbpfan.c
