@@ -24,6 +24,7 @@
 #include "daemon.h"
 #include "global.h"
 #include "minunit.h"
+#include <syslog.h>
 
 int daemonize = 1;
 int verbose = 0;
@@ -72,6 +73,13 @@ int main(int argc, char *argv[])
             exit(0);
             break;
         }
+    }
+
+    uid_t uid=getuid(), euid=geteuid();
+    if (!(uid<0 || uid!=euid)) {
+        syslog(LOG_INFO, "Mbpfan not started with root privileges. Exiting.");
+        printf("Mbpfan not started with root privileges. Exiting.\n");
+        exit(0);
     }
 
     // pointer to mbpfan() function in mbpfan.c
