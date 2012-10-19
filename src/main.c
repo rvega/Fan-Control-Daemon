@@ -99,6 +99,7 @@ int main(int argc, char *argv[])
     if (!(fread (buf, 1, sizeof (buf), fd) > 0)) {
         syslog(LOG_INFO, "Mbpfan needs coretemp module. Please load it and run mbpfan again. Exiting.");
         printf("Mbpfan needs coretemp module. Please load it and run mbpfan again. Exiting.\n");
+        exit(0);
     }
 
     fd = popen("lsmod | grep applesmc", "r");
@@ -106,6 +107,7 @@ int main(int argc, char *argv[])
     if (!(fread (buf, 1, sizeof (buf), fd) > 0)) {
         syslog(LOG_INFO, "Mbpfan needs applesmc module. Please load it and run mbpfan again. Exiting.");
         printf("Mbpfan needs applescm module. Please load it and run mbpfan again. Exiting.\n");
+        exit(0);
     }
 
     // pointer to mbpfan() function in mbpfan.c
