@@ -87,6 +87,11 @@ void signal_handler(int signal)
         delete_pid();
         //TODO: free resources
         exit(0);
+    case SIGSTOP:
+        syslog(LOG_WARNING, "Received SIGSTOP signal.");
+        delete_pid();
+        //TODO: free resources
+        exit(0);
     default:
         syslog(LOG_WARNING, "Unhandled signal (%d) %s", signal, strsignal(signal));
         break;

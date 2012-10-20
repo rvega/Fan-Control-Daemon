@@ -19,7 +19,7 @@ This enhanced version assumes any number of processors and fans (max. 10).
 Supported GNU/Linux Distributions
 ---------------------------------
 We provide scripts to to load mbpfan daemon at system boot for many distros.
-Please note that the support is provided by volunteers. mbpfan needs test and bug reports.
+Please note that the support is provided by volunteers. mbpfan needs tests and bug reports.
 
 Supported distributions:
 
