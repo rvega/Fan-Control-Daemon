@@ -57,18 +57,8 @@ int max_temp = 86;   // do not set it > 90
 
 int polling_interval = 7;
 
-/*
-struct s_sensors {
-    char* path;
-    char* fan_output_path;
-    char* fan_manual_path;
-    unsigned int temperature;
-    struct s_sensors *next;
-};
- */
-
 typedef struct s_sensors t_sensors;
-
+typedef struct s_fans t_fans;
 
 t_sensors *retrieve_sensors()
 {
@@ -84,12 +74,12 @@ t_sensors *retrieve_sensors()
     char number[2];
     sprintf(number,"%d",0);
 
-    int i = 0;
-
-    for(i = 0; i<10; i++) {
+    int counter = 0;
+    int sensors_found = 0;
+    for(counter = 0; counter<10; counter++) {
         path = (char*) malloc(sizeof( char ) * path_size);
 
-        sprintf(number,"%d",i);
+        sprintf(number,"%d",counter);
         path[0] = '\0';
         strncat( path, path_begin, strlen(path_begin) );
         strncat( path, number, strlen(number) );
@@ -119,22 +109,29 @@ t_sensors *retrieve_sensors()
             }
 
             fclose(file);
+            sensors_found++;
         }
 
         free(path);
         path = NULL;
     }
 
-    if(sensors_head != NULL) {
-        find_fans(sensors_head);
+    if(verbose) {
+        printf("Found %d sensors\n", sensors_found);
+
+        if(daemonize) {
+            syslog(LOG_INFO, "Found %d sensors", sensors_found);
+        }
     }
 
     return sensors_head;
 }
 
-void find_fans(t_sensors* sensors)
+t_fans *retrieve_fans()
 {
-    t_sensors *tmp = sensors;
+
+    t_fans *fans_head = NULL;
+    t_fans *fan = NULL;
 
     char *path_output = NULL;
     char *path_manual = NULL;
@@ -142,17 +139,17 @@ void find_fans(t_sensors* sensors)
     const char *path_begin = "/sys/devices/platform/applesmc.768/fan";
     const char *path_output_end = "_output";
     const char *path_man_end = "_manual";
-
+    
     int path_min_size = strlen(path_begin) + strlen(path_output_end) + 2;
     int path_man_size = strlen(path_begin) + strlen(path_man_end) + 2;
     char number[2];
     sprintf(number,"%d",0);
 
     int counter = 0;
-    int n_sensors = 0;
-    int n_fans = 0;
+    int fans_found = 0;
 
-    for(counter = 0; counter<10; counter++) {
+    for(int counter = 0; counter<10; counter++) {
+        
         path_output = (char*) malloc(sizeof( char ) * path_min_size);
         path_output[0] = '\0';
         path_manual = (char*) malloc(sizeof( char ) * path_man_size);
@@ -171,38 +168,53 @@ void find_fans(t_sensors* sensors)
         FILE *file = fopen(path_output, "r");
 
         if(file != NULL) {
-            if (tmp->path != NULL) {
-                tmp->fan_output_path = (char *) malloc(sizeof( char ) * path_min_size);
-                tmp->fan_manual_path = (char *) malloc(sizeof( char ) * path_man_size);
+            fan = (t_fans *) malloc( sizeof( t_fans ) );
+            fan->fan_output_path = (char *) malloc(sizeof( char ) * path_min_size);
+            fan->fan_manual_path = (char *) malloc(sizeof( char ) * path_man_size);
+            strcpy(fan->fan_output_path, path_output);
+            strcpy(fan->fan_manual_path, path_manual);
+
+            if (fans_head == NULL) {
+                fans_head = fan;
+                fans_head->next = NULL;
+
+            } else {
+                t_fans *tmp = fans_head;
+
+                while (tmp->next != NULL) {
+                    tmp = tmp->next;
+                }
+
+                tmp->next = fan;
+                tmp->next->next = NULL;
             }
 
-            strcpy(tmp->fan_output_path, path_output);
-            strcpy(tmp->fan_manual_path, path_manual);
-            tmp = tmp->next;
-            n_fans++;
-            n_sensors++;
             fclose(file);
+            fans_found++;
         }
+
+        free(path_output);
+        path_output = NULL;
+        free(path_manual);
+        path_manual = NULL;
     }
 
     if(verbose) {
-        printf("Found %d sensors and %d fans\n", n_sensors, n_fans);
-
+        printf("Found %d fans\n", fans_found);
         if(daemonize) {
-            syslog(LOG_INFO, "Found %d sensors and %d fans", n_sensors, n_fans);
+            syslog(LOG_INFO, "Found %d fans", fans_found);
         }
     }
 
-    free(path_output);
-    path_output = NULL;
-    free(path_manual);
-    path_manual = NULL;
+
+    return fans_head;
 }
 
-void set_fans_man(t_sensors *sensors)
+
+void set_fans_man(t_fans *fans)
 {
 
-    t_sensors *tmp = sensors;
+    t_fans *tmp = fans;
     FILE *file;
 
     while(tmp != NULL) {
@@ -238,9 +250,9 @@ t_sensors *refresh_sensors(t_sensors *sensors)
 
 
 /* Controls the speed of the fan */
-void set_fan_speed(t_sensors* sensors, int speed)
+void set_fan_speed(t_fans* fans, int speed)
 {
-    t_sensors *tmp = sensors;
+    t_fans *tmp = fans;
     FILE *file;
 
     while(tmp != NULL) {
@@ -359,10 +371,12 @@ void mbpfan()
     retrieve_settings();
 
     t_sensors* sensors = retrieve_sensors();
-    set_fans_man(sensors);
+    t_fans* fans = retrieve_fans();
+
+    set_fans_man(fans);
     new_temp = get_temp(sensors);
     fan_speed = 2000;
-    set_fan_speed(sensors, fan_speed);
+    set_fan_speed(fans, fan_speed);
 
 
     if(verbose) {
@@ -413,7 +427,7 @@ void mbpfan()
             }
         }
 
-        set_fan_speed(sensors, fan_speed);
+        set_fan_speed(fans, fan_speed);
 
         if(verbose) {
             printf("Sleeping for %d seconds\n", polling_interval);

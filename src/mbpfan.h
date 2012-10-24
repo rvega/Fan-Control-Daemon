@@ -40,6 +40,9 @@ extern int polling_interval;
 struct s_sensors;
 typedef struct s_sensors t_sensors;
 
+struct s_fans;
+typedef struct s_fans t_fans;
+
 /**
  * Tries to use the settings located in
  * /etc/mbpfan.conf
@@ -63,19 +66,19 @@ t_sensors *refresh_sensors(t_sensors *sensors);
  * Detect the fans in /sys/devices/platform/applesmc.768/
  * Associate each fan to a sensor
  */
-void find_fans(t_sensors *sensors);
+t_fans* retrieve_fans();
 
 /**
  * Given a list of sensors with associated fans
  * Set them to manual control
  */
-void set_fans_man(t_sensors *sensors);
+void set_fans_man(t_fans *fans);
 
 /**
  * Given a list of sensors with associated fans
  * Change their speed
  */
-void set_fan_speed(t_sensors* sensors, int speed);
+void set_fan_speed(t_fans* fans, int speed);
 
 /**
  *  Return average CPU temp in degrees (ceiling)

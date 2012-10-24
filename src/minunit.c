@@ -33,9 +33,9 @@ static const char *test_sensor_paths()
 
 static const char *test_fan_paths()
 {
-    t_sensors* sensors = retrieve_sensors();
-    mu_assert("No sensors found", sensors != NULL);
-    t_sensors* tmp = sensors;
+    t_fans* fans = retrieve_fans();
+    mu_assert("No fans found", fans != NULL);
+    t_fans* tmp = fans;
     int found_fan_path = 0;
 
     while(tmp != NULL) {

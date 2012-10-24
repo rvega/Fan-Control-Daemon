@@ -9,11 +9,18 @@ extern const char* program_pid;
 
 struct s_sensors {
     char* path;
-    char* fan_output_path;
-    char* fan_manual_path;
     unsigned int temperature;
     struct s_sensors *next;
 };
 
-typedef s_sensors t_sensors;
+struct s_fans {
+    char* path;
+    char* fan_output_path;
+    char* fan_manual_path;
+    struct s_fans *next;
+};
+
+typedef struct s_sensors t_sensors;
+typedef struct s_fans t_fans;
+
 #endif
