@@ -277,12 +277,18 @@ unsigned short get_temp(t_sensors* sensors)
 
     t_sensors* tmp = sensors;
 
+    int number_sensors = 0;
     while(tmp != NULL) {
         sum_temp += tmp->temperature;
         tmp = tmp->next;
+        number_sensors++;
     }
 
-    temp = (unsigned short)( ceil( (float)( sum_temp ) / 2000. ) );
+    // just to be safe
+    if (number_sensors == 0)
+        number_sensors++;
+
+    temp = (unsigned short)( ceil( (float)( sum_temp ) / (number_sensors * 1000) ) );
     return temp;
 }
 
