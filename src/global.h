@@ -4,8 +4,8 @@
 extern int daemonize;
 extern int verbose;
 
-extern const char* program_name;
-extern const char* program_pid;
+extern const char* PROGRAM_NAME;
+extern const char* PROGRAM_PID;
 
 struct s_sensors {
     char* path;

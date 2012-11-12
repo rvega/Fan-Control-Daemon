@@ -76,6 +76,7 @@ t_sensors *retrieve_sensors()
 
     int counter = 0;
     int sensors_found = 0;
+
     for(counter = 0; counter<10; counter++) {
         path = (char*) malloc(sizeof( char ) * path_size);
 
@@ -139,7 +140,7 @@ t_fans *retrieve_fans()
     const char *path_begin = "/sys/devices/platform/applesmc.768/fan";
     const char *path_output_end = "_output";
     const char *path_man_end = "_manual";
-    
+
     int path_min_size = strlen(path_begin) + strlen(path_output_end) + 2;
     int path_man_size = strlen(path_begin) + strlen(path_man_end) + 2;
     char number[2];
@@ -149,7 +150,7 @@ t_fans *retrieve_fans()
     int fans_found = 0;
 
     for(int counter = 0; counter<10; counter++) {
-        
+
         path_output = (char*) malloc(sizeof( char ) * path_min_size);
         path_output[0] = '\0';
         path_manual = (char*) malloc(sizeof( char ) * path_man_size);
@@ -201,6 +202,7 @@ t_fans *retrieve_fans()
 
     if(verbose) {
         printf("Found %d fans\n", fans_found);
+
         if(daemonize) {
             syslog(LOG_INFO, "Found %d fans", fans_found);
         }
@@ -278,6 +280,7 @@ unsigned short get_temp(t_sensors* sensors)
     t_sensors* tmp = sensors;
 
     int number_sensors = 0;
+
     while(tmp != NULL) {
         sum_temp += tmp->temperature;
         tmp = tmp->next;
@@ -285,8 +288,9 @@ unsigned short get_temp(t_sensors* sensors)
     }
 
     // just to be safe
-    if (number_sensors == 0)
+    if (number_sensors == 0) {
         number_sensors++;
+    }
 
     temp = (unsigned short)( ceil( (float)( sum_temp ) / (number_sensors * 1000) ) );
     return temp;
