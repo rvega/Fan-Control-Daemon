@@ -48,7 +48,7 @@ typedef struct s_fans t_fans;
  * /etc/mbpfan.conf
  * If it fails, the default hardcoded settings are used
  */
-void retrieve_settings();
+void retrieve_settings(const char* settings_path);
 
 /**
  * Detect the sensors in /sys/devices/platform/coretemp.0/temp

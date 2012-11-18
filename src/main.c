@@ -68,11 +68,10 @@ void check_requirements()
     }
 
     /**
-         * Check for coretemp and applesmc modules
-         * Credits: -http://stackoverflow.com/questions/12978794
-         */
+      * Check for coretemp and applesmc modules
+      * Credits: -http://stackoverflow.com/questions/12978794
+      */
     FILE *fd = popen("lsmod | grep coretemp", "r");
-
     char buf[16];
 
     if (!(fread (buf, 1, sizeof (buf), fd) > 0)) {
@@ -83,6 +82,7 @@ void check_requirements()
             printf("%s needs coretemp module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
             exit(0);
         }
+
     }
 
     fd = popen("lsmod | grep applesmc", "r");
@@ -92,7 +92,7 @@ void check_requirements()
 
         if (ENOENT == errno) {
             syslog(LOG_INFO, "%s needs applesmc support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
-                        printf("%s needs applesmc module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
+            printf("%s needs applesmc module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
             exit(0);
         }
 

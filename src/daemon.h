@@ -45,10 +45,10 @@ int delete_pid();
  */
 void signal_handler(int signal);
 
-
 /**
  * Daemonizes
  */
-int go_daemon(void (*function)());
+void go_daemon(void (*function)());
+
 
 #endif

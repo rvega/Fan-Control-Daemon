@@ -29,6 +29,7 @@
 #include <unistd.h>
 #include "mbpfan.h"
 #include "global.h"
+#include "daemon.h"
 
 int write_pid(int pid)
 {
@@ -65,16 +66,13 @@ int delete_pid()
     return remove(PROGRAM_PID);
 }
 
-
 void signal_handler(int signal)
 {
 
     switch(signal) {
     case SIGHUP:
-        //TODO: restart myself
         syslog(LOG_WARNING, "Received SIGHUP signal.");
-        delete_pid();
-        exit(0);
+        retrieve_settings(NULL);
         break;
     case SIGTERM:
         syslog(LOG_WARNING, "Received SIGTERM signal.");
@@ -105,6 +103,7 @@ void go_daemon(void (*fan_control)())
     signal(SIGHUP, signal_handler);
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
+    signal(SIGSTOP, signal_handler);
 
     syslog(LOG_INFO, "%s starting up", PROGRAM_NAME);
 
@@ -131,6 +130,7 @@ void go_daemon(void (*fan_control)())
         }
 
         if (pid_slave > 0) {
+            signal(SIGCHLD, SIG_IGN);
             // kill the father
             exit(EXIT_SUCCESS);
         }

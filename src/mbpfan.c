@@ -296,12 +296,19 @@ unsigned short get_temp(t_sensors* sensors)
     return temp;
 }
 
-void retrieve_settings()
+void retrieve_settings(const char* settings_path)
 {
     Settings *settings = NULL;
     int result = 0;
     FILE *f = NULL;
-    f = fopen("/etc/mbpfan.conf", "r");
+
+    if (settings_path == NULL) {
+        f = fopen("/etc/mbpfan.conf", "r");
+
+    } else {
+        f = fopen(settings_path, "r");
+    }
+
 
     if (f == NULL) {
         /* Could not open configfile */
@@ -378,7 +385,7 @@ void mbpfan()
     int temp_change;
     int step_up, step_down;
 
-    retrieve_settings();
+    retrieve_settings(NULL);
 
     t_sensors* sensors = retrieve_sensors();
     t_fans* fans = retrieve_fans();
@@ -387,7 +394,6 @@ void mbpfan()
     new_temp = get_temp(sensors);
     fan_speed = 2000;
     set_fan_speed(fans, fan_speed);
-
 
     if(verbose) {
         printf("Sleeping for %d seconds\n", polling_interval);

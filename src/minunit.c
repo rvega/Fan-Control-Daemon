@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <limits.h>
+#include <signal.h>
 #include "global.h"
 #include "mbpfan.h"
 #include "settings.h"
@@ -124,6 +125,54 @@ static const char *test_config_file()
     return 0;
 }
 
+static const char *test_settings()
+{
+    retrieve_settings("./mbpfan.conf.test1");
+    mu_assert("min_fan_speed value is not 6200", min_fan_speed == 6200);
+    mu_assert("polling_interval is not 1", polling_interval == 1);
+    retrieve_settings("./mbpfan.conf");
+    mu_assert("min_fan_speed value is not 2000", min_fan_speed == 2000);
+    mu_assert("polling_interval is not 7", polling_interval == 7);
+    return 0;
+}
+
+int received = 0;
+
+static void handler(int signal)
+{
+
+    switch(signal) {
+    case SIGHUP:
+        received = 1;
+        retrieve_settings("./mbpfan.conf.test1");
+        break;
+    default:
+        received = 0;
+        break;
+    }
+}
+
+static const char *test_sighup_receive()
+{
+    signal(SIGHUP, handler);
+    raise(SIGHUP);
+    mu_assert("did not receive SIGHUP signal", received == 1);
+    return 0;
+}
+
+static const char *test_settings_reload()
+{
+    signal(SIGHUP, handler);
+    retrieve_settings("./mbpfan.conf");
+    mu_assert("min_fan_speed value is not 2000 before SIGHUP", min_fan_speed == 2000);
+    mu_assert("polling_interval is not 7 before SIHUP", polling_interval == 7);
+    raise(SIGHUP);
+    mu_assert("min_fan_speed value is not 6200 after SIGHUP", min_fan_speed == 6200);
+    mu_assert("polling_interval is not 1 after SIHUP", polling_interval == 1);
+    retrieve_settings("./mbpfan.conf");
+    return 0;
+}
+
 
 static const char *all_tests()
 {
@@ -131,6 +180,9 @@ static const char *all_tests()
     mu_run_test(test_fan_paths);
     mu_run_test(test_get_temp);
     mu_run_test(test_config_file);
+    mu_run_test(test_settings);
+    mu_run_test(test_sighup_receive);
+    mu_run_test(test_settings_reload);
     return 0;
 }
 

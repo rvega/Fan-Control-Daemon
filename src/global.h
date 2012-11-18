@@ -23,4 +23,5 @@ struct s_fans {
 typedef struct s_sensors t_sensors;
 typedef struct s_fans t_fans;
 
+
 #endif
