@@ -25,6 +25,7 @@ Supported distributions:
 
 - Ubuntu
 - Debian
+- Archlinux
 - Fedora
 - RedHat
 - CentOS
@@ -33,6 +34,7 @@ Supported distributions:
 
 Tested Macbook Models
 ---------------------
+- MacBook Pro 9,2 13"  (Intel i5/i7 - Linux 3.10)
 - Macbook Pro 8,2 15"  (Intel i7 - Linux 3.6.2)
 - MacBook Pro 8,1 13"  (Intel i7 - Linux 3.2.0)
 - Macbook Pro 6,2 15"  (Intel i7 - Linux 3.5.0)
