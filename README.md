@@ -47,15 +47,25 @@ Warning
 Be sure to load the kernel modules **applesmc** and **coretemp**.
 
 
-Compile Instructions
----------------------
+Arch Linux
+---------
+See [mbpfan-git at AUR](https://aur.archlinux.org/packages/mbpfan-git/).
+Otherwise, please refer to the Generic Instructions.
+
+
+Ubuntu
+------
+
+Install the ```build-essential``` package.
+Then, refer to the Generic Install Instructions.
+
+
+Generic Install Instructions
+-------------------------
 Compile with
 
     make
 
-
-Install Instructions
---------------------
 Install with
 
     sudo make install
