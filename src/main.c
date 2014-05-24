@@ -85,6 +85,8 @@ void check_requirements()
 
     }
 
+    pclose(fd);
+
     fd = popen("lsmod | grep applesmc", "r");
 
     if (!(fread (buf, 1, sizeof (buf), fd) > 0)) {
@@ -97,6 +99,8 @@ void check_requirements()
         }
 
     }
+
+    pclose(fd);
 
 }
 
