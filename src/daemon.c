@@ -1,6 +1,6 @@
 /**
  *  Copyright (C) 2012  Peter Lombardo <http://peterlombardo.wikidot.com/linux-daemon-in-c>
- *  Modifications (2012) by Daniel Graziotin <dgraziotin@task3.cc>
+ *  Modifications (2012) by Daniel Graziotin <daniel@ineed.coffee>
  *  Modifications (2012) by Ismail Khatib <ikhatib@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify

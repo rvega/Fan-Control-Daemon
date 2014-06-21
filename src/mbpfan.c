@@ -2,7 +2,7 @@
  *  mbpfan.c - automatically control fan for MacBook Pro
  *  Copyright (C) 2010  Allan McRae <allan@archlinux.org>
  *  Modifications by Rafael Vega <rvega@elsoftwarehamuerto.org>
- *  Modifications (2012) by Daniel Graziotin <dgraziotin@task3.cc>
+ *  Modifications (2012) by Daniel Graziotin <daniel@ineed.coffee>
  *  Modifications (2012) by Ismail Khatib <ikhatib@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  2012-06-09 - v1.2
+ *  2012-06-09 - v1.5.x
  *
  *  Notes:
  *    Assumes any number of processors and fans (max. 10)
@@ -36,6 +36,7 @@
 #include <string.h>
 #include <math.h>
 #include <syslog.h>
+#include <linux/version.h>
 #include "mbpfan.h"
 #include "global.h"
 #include "settings.h"
@@ -67,7 +68,34 @@ t_sensors *retrieve_sensors()
     t_sensors *s = NULL;
 
     char *path = NULL;
+
+    
+    #if LINUX_VERSION_CODE < KERNEL_VERSION(3,15,0)
+
+    if(verbose) {
+        printf("Using legacy sensor path for kernel < 3.15.0\n");
+
+        if(daemonize) {
+            syslog(LOG_INFO, "Using legacy path for kernel < 3.15.0");
+        }
+    }
+
     const char *path_begin = "/sys/devices/platform/coretemp.0/temp";
+
+    #else
+
+    if(verbose) {
+        printf("Using new sensor path for kernel >= 3.0.15\n");
+
+        if(daemonize) {
+            syslog(LOG_INFO, "Using new sensor path for kernel >= 3.0.15");
+        }
+    }
+
+    const char *path_begin = "/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp";
+
+    #endif
+
     const char *path_end = "_input";
 
     int path_size = strlen(path_begin) + strlen(path_end) + 2;
