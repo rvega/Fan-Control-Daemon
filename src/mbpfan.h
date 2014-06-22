@@ -1,6 +1,6 @@
 /**
  *  Copyright (C) 2010  Allan McRae <allan@archlinux.org>
- *  Modifications (2012) by Daniel Graziotin <dgraziotin@task3.cc>
+ *  Modifications (2012) by Daniel Graziotin <daniel@ineed.coffee>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,6 +42,11 @@ typedef struct s_sensors t_sensors;
 
 struct s_fans;
 typedef struct s_fans t_fans;
+
+/**
+ * Return true if the kernel is < 3.15.0
+ */
+bool is_legacy_kernel();
 
 /**
  * Tries to use the settings located in

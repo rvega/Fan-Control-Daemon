@@ -2,7 +2,7 @@
  *  mbpfan.c - automatically control fan for MacBook Pro
  *  Copyright (C) 2010  Allan McRae <allan@archlinux.org>
  *  Modifications by Rafael Vega <rvega@elsoftwarehamuerto.org>
- *  Modifications (2012) by Daniel Graziotin <dgraziotin@task3.cc>
+ *  Modifications (2012) by Daniel Graziotin <daniel@ineed.coffee>
  *  Modifications (2012) by Ismail Khatib <ikhatib@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  2012-06-09 - v1.2
+ *  2012-06-09 - v1.5.x
  *
  *  Notes:
  *    Assumes any number of processors and fans (max. 10)
@@ -36,6 +36,8 @@
 #include <string.h>
 #include <math.h>
 #include <syslog.h>
+#include <sys/utsname.h>
+#include <sys/errno.h>
 #include "mbpfan.h"
 #include "global.h"
 #include "settings.h"
@@ -60,6 +62,30 @@ int polling_interval = 7;
 typedef struct s_sensors t_sensors;
 typedef struct s_fans t_fans;
 
+bool is_legacy_kernel()
+{
+    struct utsname kernel;
+    uname(&kernel);
+
+    char *str_kernel_version;
+    str_kernel_version = strndup(kernel.release + 2, 2);
+
+    if(verbose) {
+        printf("Detected kernel version: %s\n", kernel.release);
+        printf("Detected kernel minor revision: %s\n", str_kernel_version);
+
+        if(daemonize) {
+            syslog(LOG_INFO, "Kernel version: %s", kernel.release);
+            syslog(LOG_INFO, "Detected kernel minor revision: %sn", str_kernel_version);
+        }
+    }
+
+    int kernel_version = atoi(str_kernel_version);
+
+    return (kernel_version < 15);
+}
+
+
 t_sensors *retrieve_sensors()
 {
 
@@ -67,16 +93,70 @@ t_sensors *retrieve_sensors()
     t_sensors *s = NULL;
 
     char *path = NULL;
-    const char *path_begin = "/sys/devices/platform/coretemp.0/temp";
+    char *path_begin = NULL;
+
+    if (is_legacy_kernel()) {
+        if(verbose) {
+            printf("Using legacy sensor path for kernel < 3.15.0\n");
+
+            if(daemonize) {
+                syslog(LOG_INFO, "Using legacy path for kernel < 3.15.0");
+            }
+        }
+
+        path_begin = (char *) "/sys/devices/platform/coretemp.0/temp";
+
+    } else {
+
+        if(verbose) {
+            printf("Using new sensor path for kernel >= 3.0.15\n");
+
+            if(daemonize) {
+                syslog(LOG_INFO, "Using new sensor path for kernel >= 3.0.15");
+            }
+        }
+
+        path_begin = (char *) "/sys/devices/platform/coretemp.0/hwmon/hwmon";
+
+        int counter;
+        for (counter = 0; counter < 10; counter++) {
+
+            char hwmon_path[strlen(path_begin)+1];
+
+            sprintf(hwmon_path, "%s%d", path_begin, counter);
+
+            // thanks http://stackoverflow.com/questions/18192998/plain-c-opening-a-directory-with-fopen
+            fopen(hwmon_path, "wb");
+
+            if (errno == EISDIR) {
+
+                path_begin = (char*) malloc(sizeof( char ) * (strlen(hwmon_path) + strlen("/temp") + 1));
+                strcpy(path_begin, hwmon_path);
+                strcat(path_begin, "/temp");
+
+                if(verbose) {
+                    printf("Found hwmon path at %s\n", path_begin);
+
+                    if(daemonize) {
+                        syslog(LOG_INFO, "Found hwmon path at %s\n", path_begin);
+                    }
+
+                }
+
+                break;
+            }
+        }
+    }
+
     const char *path_end = "_input";
 
     int path_size = strlen(path_begin) + strlen(path_end) + 2;
     char number[2];
     sprintf(number,"%d",0);
 
-    int counter = 0;
     int sensors_found = 0;
 
+    int counter = 0;
     for(counter = 0; counter<10; counter++) {
         path = (char*) malloc(sizeof( char ) * path_size);
 
@@ -127,6 +207,7 @@ t_sensors *retrieve_sensors()
 
     return sensors_head;
 }
+
 
 t_fans *retrieve_fans()
 {
@@ -295,6 +376,7 @@ unsigned short get_temp(t_sensors* sensors)
     temp = (unsigned short)( ceil( (float)( sum_temp ) / (number_sensors * 1000) ) );
     return temp;
 }
+
 
 void retrieve_settings(const char* settings_path)
 {
