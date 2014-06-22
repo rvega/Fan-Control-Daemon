@@ -36,12 +36,8 @@
 #include <string.h>
 #include <math.h>
 #include <syslog.h>
-<<<<<<< HEAD
 #include <sys/utsname.h>
 #include <sys/errno.h>
-=======
-#include <linux/version.h>
->>>>>>> 6bfe9325c37fb5f1f84437af0eeb592202bd5264
 #include "mbpfan.h"
 #include "global.h"
 #include "settings.h"
@@ -97,7 +93,6 @@ t_sensors *retrieve_sensors()
     t_sensors *s = NULL;
 
     char *path = NULL;
-<<<<<<< HEAD
     char *path_begin = NULL;
 
     if (is_legacy_kernel()) {
@@ -153,36 +148,6 @@ t_sensors *retrieve_sensors()
         }
     }
 
-=======
-
-    
-    #if LINUX_VERSION_CODE < KERNEL_VERSION(3,15,0)
-
-    if(verbose) {
-        printf("Using legacy sensor path for kernel < 3.15.0\n");
-
-        if(daemonize) {
-            syslog(LOG_INFO, "Using legacy path for kernel < 3.15.0");
-        }
-    }
-
-    const char *path_begin = "/sys/devices/platform/coretemp.0/temp";
-
-    #else
-
-    if(verbose) {
-        printf("Using new sensor path for kernel >= 3.0.15\n");
-
-        if(daemonize) {
-            syslog(LOG_INFO, "Using new sensor path for kernel >= 3.0.15");
-        }
-    }
-
-    const char *path_begin = "/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp";
-
-    #endif
-
->>>>>>> 6bfe9325c37fb5f1f84437af0eeb592202bd5264
     const char *path_end = "_input";
 
     int path_size = strlen(path_begin) + strlen(path_end) + 2;
