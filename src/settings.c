@@ -773,9 +773,11 @@ static int get_converted_value(const Settings *settings, const char *section, co
     case CONVERT_MODE_INT:
         *((int *)out) = atoi(value);
         return 1;
+
     case CONVERT_MODE_LONG:
         *((long *)out) = atol(value);
         return 1;
+
     case CONVERT_MODE_DOUBLE:
         *((double *)out) = atof(value);
         return 1;
@@ -821,12 +823,15 @@ static int get_converted_tuple(const Settings *settings, const char *section, co
         case CONVERT_MODE_INT:
             ((int *)out)[count] = atoi(token);
             break;
+
         case CONVERT_MODE_LONG:
             ((long *)out)[count] = atol(token);
             break;
+
         case CONVERT_MODE_DOUBLE:
             ((double *)out)[count] = atof(token);
             break;
+
         default:
             return 0;
         }

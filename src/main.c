@@ -116,16 +116,20 @@ int main(int argc, char *argv[])
             print_usage(argc, argv);
             exit(0);
             break;
+
         case 'f':
             daemonize = 0;
             break;
+
         case 't':
             tests();
             exit(0);
             break;
+
         case 'v':
             verbose = 1;
             break;
+
         default:
             print_usage(argc, argv);
             exit(0);

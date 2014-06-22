@@ -44,6 +44,11 @@ struct s_fans;
 typedef struct s_fans t_fans;
 
 /**
+ * Return true if the kernel is < 3.15.0
+ */
+bool is_legacy_kernel();
+
+/**
  * Tries to use the settings located in
  * /etc/mbpfan.conf
  * If it fails, the default hardcoded settings are used

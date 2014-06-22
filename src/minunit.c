@@ -146,6 +146,7 @@ static void handler(int signal)
         received = 1;
         retrieve_settings("./mbpfan.conf.test1");
         break;
+
     default:
         received = 0;
         break;
