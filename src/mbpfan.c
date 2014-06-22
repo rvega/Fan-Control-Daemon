@@ -15,7 +15,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  2012-06-09 - v1.5.x
+ *  2014-06-22 - v1.7.0
  *
  *  Notes:
  *    Assumes any number of processors and fans (max. 10)
