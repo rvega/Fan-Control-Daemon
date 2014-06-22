@@ -85,6 +85,7 @@ bool is_legacy_kernel()
     return (kernel_version < 15);
 }
 
+
 t_sensors *retrieve_sensors()
 {
 
@@ -103,7 +104,7 @@ t_sensors *retrieve_sensors()
             }
         }
 
-        path_begin = "/sys/devices/platform/coretemp.0/temp";
+        path_begin = (char *) "/sys/devices/platform/coretemp.0/temp";
 
     } else {
 
@@ -115,10 +116,9 @@ t_sensors *retrieve_sensors()
             }
         }
 
-        path_begin = "/sys/devices/platform/coretemp.0/hwmon/hwmon";
+        path_begin = (char *) "/sys/devices/platform/coretemp.0/hwmon/hwmon";
 
         int counter;
-
         for (counter = 0; counter < 10; counter++) {
 
             char hwmon_path[strlen(path_begin)+1];
@@ -154,9 +154,9 @@ t_sensors *retrieve_sensors()
     char number[2];
     sprintf(number,"%d",0);
 
-    int counter = 0;
     int sensors_found = 0;
 
+    int counter = 0;
     for(counter = 0; counter<10; counter++) {
         path = (char*) malloc(sizeof( char ) * path_size);
 
@@ -207,6 +207,7 @@ t_sensors *retrieve_sensors()
 
     return sensors_head;
 }
+
 
 t_fans *retrieve_fans()
 {
@@ -375,6 +376,7 @@ unsigned short get_temp(t_sensors* sensors)
     temp = (unsigned short)( ceil( (float)( sum_temp ) / (number_sensors * 1000) ) );
     return temp;
 }
+
 
 void retrieve_settings(const char* settings_path)
 {
