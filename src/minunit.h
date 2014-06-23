@@ -11,6 +11,8 @@
 
 extern int tests_run;
 
+
+static const char *test_is_legacy_kernel();
 static const char *test_sensor_paths();
 static const char *test_fan_paths();
 static const char *test_get_temp();

@@ -68,7 +68,16 @@ bool is_legacy_kernel()
     uname(&kernel);
 
     char *str_kernel_version;
-    str_kernel_version = strndup(kernel.release + 2, 2);
+    str_kernel_version = strtok(kernel.release, ".");
+
+    if (atoi(str_kernel_version) != 3){
+        syslog(LOG_INFO, "mbpfan detected a non 3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
+        printf("mbpfan detected a non 3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
+        exit(0);
+    }
+
+    str_kernel_version = strtok(NULL, ".");
+    int kernel_version = atoi(str_kernel_version);
 
     if(verbose) {
         printf("Detected kernel version: %s\n", kernel.release);
@@ -76,11 +85,9 @@ bool is_legacy_kernel()
 
         if(daemonize) {
             syslog(LOG_INFO, "Kernel version: %s", kernel.release);
-            syslog(LOG_INFO, "Detected kernel minor revision: %sn", str_kernel_version);
+            syslog(LOG_INFO, "Detected kernel minor revision: %s", str_kernel_version);
         }
     }
-
-    int kernel_version = atoi(str_kernel_version);
 
     return (kernel_version < 15);
 }

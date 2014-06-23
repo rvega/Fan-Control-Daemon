@@ -4,6 +4,7 @@
 #include <time.h>
 #include <limits.h>
 #include <signal.h>
+#include <sys/utsname.h>
 #include "global.h"
 #include "mbpfan.h"
 #include "settings.h"
@@ -11,6 +12,27 @@
 
 int tests_run = 0;
 
+static const char *test_is_legacy_kernel()
+{
+
+    struct utsname kernel;
+    uname(&kernel);
+
+    mu_assert("Kernel major version is not 3.", kernel.release[0] == '3');
+
+    char *pch;
+    pch = strtok(kernel.release, ".");
+    pch = strtok(NULL, ".");
+
+    int minor = atoi(pch);
+
+    if (minor < 15)
+        mu_assert("Legacy kernel not detected by mbpfan.", is_legacy_kernel() == 1);
+    else
+        mu_assert("Non-legacy kernel not detected by mbpfan", is_legacy_kernel() == 0);
+
+    return 0;
+}
 
 static const char *test_sensor_paths()
 {
@@ -177,6 +199,7 @@ static const char *test_settings_reload()
 
 static const char *all_tests()
 {
+    mu_run_test(test_is_legacy_kernel);
     mu_run_test(test_sensor_paths);
     mu_run_test(test_fan_paths);
     mu_run_test(test_get_temp);
