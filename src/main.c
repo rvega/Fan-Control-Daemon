@@ -64,7 +64,7 @@ void check_requirements()
     if (uid != 0 || euid != 0) {
         syslog(LOG_INFO, "%s needs root privileges. Please run %s as root. Exiting.", PROGRAM_NAME, PROGRAM_NAME);
         printf("%s not started with root privileges. Please run %s as root. Exiting.\n", PROGRAM_NAME, PROGRAM_NAME);
-        exit(0);
+        exit(EXIT_FAILURE);
     }
 
     /**
@@ -80,7 +80,7 @@ void check_requirements()
         if (ENOENT == errno) {
             syslog(LOG_INFO, "%s needs coretemp support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
             printf("%s needs coretemp module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
-            exit(0);
+            exit(EXIT_FAILURE);
         }
 
     }
@@ -95,7 +95,7 @@ void check_requirements()
         if (ENOENT == errno) {
             syslog(LOG_INFO, "%s needs applesmc support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
             printf("%s needs applesmc module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
-            exit(0);
+            exit(EXIT_FAILURE);
         }
 
     }
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
         switch(c) {
         case 'h':
             print_usage(argc, argv);
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
 
         case 'f':
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 
         case 't':
             tests();
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
 
         case 'v':
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
 
         default:
             print_usage(argc, argv);
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         }
     }
@@ -144,5 +144,5 @@ int main(int argc, char *argv[])
     // pointer to mbpfan() function in mbpfan.c
     void (*fan_control)() = mbpfan;
     go_daemon(fan_control);
-    exit(0);
+    exit(EXIT_SUCCESS);
 }

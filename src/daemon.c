@@ -79,20 +79,20 @@ void signal_handler(int signal)
         syslog(LOG_WARNING, "Received SIGTERM signal.");
         delete_pid();
         //TODO: free resources
-        exit(0);
+        exit(EXIT_SUCCESS);
         break;
 
     case SIGINT:
         syslog(LOG_WARNING, "Received SIGINT signal.");
         delete_pid();
         //TODO: free resources
-        exit(0);
+        exit(EXIT_SUCCESS);
 
     case SIGSTOP:
         syslog(LOG_WARNING, "Received SIGSTOP signal.");
         delete_pid();
         //TODO: free resources
-        exit(0);
+        exit(EXIT_SUCCESS);
 
     default:
         syslog(LOG_WARNING, "Unhandled signal (%d) %s", signal, strsignal(signal));

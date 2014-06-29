@@ -73,7 +73,7 @@ bool is_legacy_kernel()
     if (atoi(str_kernel_version) != 3){
         syslog(LOG_INFO, "mbpfan detected a non 3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
         printf("mbpfan detected a non 3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
-        exit(0);
+        exit(EXIT_FAILURE);
     }
 
     str_kernel_version = strtok(NULL, ".");
