@@ -213,7 +213,7 @@ t_sensors *retrieve_sensors()
     }
 
     if (!sensors_found > 0){
-        syslog(LOG_INFO, "mbpfan could not detect any temp sensor. Please contact the developer.\n");
+        syslog(LOG_CRIT, "mbpfan could not detect any temp sensor. Please contact the developer.\n");
         printf("mbpfan could not detect any temp sensor. Please contact the developer.\n");
         exit(EXIT_FAILURE);
     }
@@ -303,7 +303,7 @@ t_fans *retrieve_fans()
     }
 
     if (!fans_found > 0){
-        syslog(LOG_INFO, "mbpfan could not detect any fan. Please contact the developer.\n");
+        syslog(LOG_CRIT, "mbpfan could not detect any fan. Please contact the developer.\n");
         printf("mbpfan could not detect any fan. Please contact the developer.\n");
         exit(EXIT_FAILURE);
     }
@@ -431,7 +431,7 @@ void retrieve_settings(const char* settings_path)
                 printf("Couldn't read configfile\n");
 
                 if(daemonize) {
-                    syslog(LOG_INFO, "Couldn't read configfile");
+                    syslog(LOG_WARNING, "Couldn't read configfile");
                 }
             }
 

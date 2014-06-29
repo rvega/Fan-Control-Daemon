@@ -62,7 +62,7 @@ void check_requirements()
     uid_t uid=getuid(), euid=geteuid();
 
     if (uid != 0 || euid != 0) {
-        syslog(LOG_INFO, "%s needs root privileges. Please run %s as root. Exiting.", PROGRAM_NAME, PROGRAM_NAME);
+        syslog(LOG_ERR, "%s needs root privileges. Please run %s as root. Exiting.", PROGRAM_NAME, PROGRAM_NAME);
         printf("%s not started with root privileges. Please run %s as root. Exiting.\n", PROGRAM_NAME, PROGRAM_NAME);
         exit(EXIT_FAILURE);
     }
@@ -78,7 +78,7 @@ void check_requirements()
         DIR* dir = opendir(CORETEMP_PATH);
 
         if (ENOENT == errno) {
-            syslog(LOG_INFO, "%s needs coretemp support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
+            syslog(LOG_ERR, "%s needs coretemp support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
             printf("%s needs coretemp module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
             exit(EXIT_FAILURE);
         }
@@ -93,7 +93,7 @@ void check_requirements()
         DIR* dir = opendir(APPLESMC_PATH);
 
         if (ENOENT == errno) {
-            syslog(LOG_INFO, "%s needs applesmc support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
+            syslog(LOG_ERR, "%s needs applesmc support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
             printf("%s needs applesmc module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
             exit(EXIT_FAILURE);
         }
