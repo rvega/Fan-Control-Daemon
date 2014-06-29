@@ -212,6 +212,12 @@ t_sensors *retrieve_sensors()
         }
     }
 
+    if (!sensors_found > 0){
+        syslog(LOG_INFO, "mbpfan could not detect any temp sensor. Please contact the developer.\n");
+        printf("mbpfan could not detect any temp sensor. Please contact the developer.\n");
+        exit(EXIT_FAILURE);
+    }
+
     return sensors_head;
 }
 
@@ -294,6 +300,12 @@ t_fans *retrieve_fans()
         if(daemonize) {
             syslog(LOG_INFO, "Found %d fans", fans_found);
         }
+    }
+
+    if (!fans_found > 0){
+        syslog(LOG_INFO, "mbpfan could not detect any fan. Please contact the developer.\n");
+        printf("mbpfan could not detect any fan. Please contact the developer.\n");
+        exit(EXIT_FAILURE);
     }
 
 
