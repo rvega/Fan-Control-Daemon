@@ -1,12 +1,14 @@
 [Unit]
-Description=Start the mbpfan daemon
+Description=A fan manager daemon for MacBook Pro
 After=syslog.target
-After=remote-fs.target
+After=sysinit.target
 
 [Service]
-ExecStart=/usr/sbin/mbpfan
-Type=forking
+Type=simple
+ExecStart=/usr/bin/mbpfan -fv
+ExecReload=/usr/bin/kill -HUP $MAINPID
+PIDFile=/run/mbpfan.pid
 Restart=always
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=sysinit.target
