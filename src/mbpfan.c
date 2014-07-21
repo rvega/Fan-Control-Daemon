@@ -59,8 +59,6 @@ int max_temp = 86;   // do not set it > 90
 
 int polling_interval = 7;
 
-typedef struct s_sensors t_sensors;
-typedef struct s_fans t_fans;
 
 bool is_legacy_kernel()
 {
