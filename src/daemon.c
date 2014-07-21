@@ -79,6 +79,7 @@ void signal_handler(int signal)
         syslog(LOG_WARNING, "Received SIGTERM signal.");
         delete_pid();
         //TODO: free resources
+        set_fans_auto(fans);
         exit(EXIT_SUCCESS);
         break;
 
@@ -86,12 +87,14 @@ void signal_handler(int signal)
         syslog(LOG_WARNING, "Received SIGINT signal.");
         delete_pid();
         //TODO: free resources
+        set_fans_auto(fans);
         exit(EXIT_SUCCESS);
 
     case SIGSTOP:
         syslog(LOG_WARNING, "Received SIGSTOP signal.");
         delete_pid();
         //TODO: free resources
+        set_fans_auto(fans);
         exit(EXIT_SUCCESS);
 
     default:
