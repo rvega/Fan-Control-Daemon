@@ -59,6 +59,9 @@ int max_temp = 86;   // do not set it > 90
 
 int polling_interval = 7;
 
+t_sensors* sensors = NULL;
+t_fans* fans = NULL;
+
 
 bool is_legacy_kernel()
 {
@@ -486,8 +489,8 @@ void mbpfan()
 
     retrieve_settings(NULL);
 
-    t_sensors* sensors = retrieve_sensors();
-    t_fans* fans = retrieve_fans();
+    sensors = retrieve_sensors();
+    fans = retrieve_fans();
 
     set_fans_man(fans);
     new_temp = get_temp(sensors);

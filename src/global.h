@@ -23,5 +23,7 @@ struct s_fans {
 typedef struct s_sensors t_sensors;
 typedef struct s_fans t_fans;
 
+extern t_sensors* sensors;
+extern t_fans* fans;
 
 #endif
