@@ -81,6 +81,12 @@ void set_fans_man(t_fans *fans);
 
 /**
  * Given a list of sensors with associated fans
+ * Set them to automatic control
+ */
+void set_fans_auto(t_fans *fans);
+
+/**
+ * Given a list of sensors with associated fans
  * Change their speed
  */
 void set_fan_speed(t_fans* fans, int speed);
