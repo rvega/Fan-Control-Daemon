@@ -241,7 +241,7 @@ t_fans *retrieve_fans()
     int counter = 0;
     int fans_found = 0;
 
-    for(int counter = 0; counter<10; counter++) {
+    for(counter = 0; counter<10; counter++) {
 
         path_output = (char*) malloc(sizeof( char ) * path_min_size);
         path_output[0] = '\0';
