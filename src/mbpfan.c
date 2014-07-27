@@ -503,19 +503,21 @@ void mbpfan()
 
     sensors = retrieve_sensors();
     fans = retrieve_fans();
-
     set_fans_man(fans);
+
     new_temp = get_temp(sensors);
-    fan_speed = 2000;
+
+    fan_speed = min_fan_speed;
     set_fan_speed(fans, fan_speed);
 
     if(verbose) {
-        printf("Sleeping for %d seconds\n", polling_interval);
+        printf("Sleeping for 2 seconds to get first temp delta\n");
 
         if(daemonize) {
-            syslog(LOG_INFO, "Sleeping for %d seconds", polling_interval);
+            syslog(LOG_INFO, "Sleeping for 2 seconds to get first temp delta");
         }
     }
+    sleep(2);
 
     step_up = (float)( max_fan_speed - min_fan_speed ) /
               (float)( ( max_temp - high_temp ) * ( max_temp - high_temp + 1 ) / 2 );
