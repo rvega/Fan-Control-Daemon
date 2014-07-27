@@ -56,7 +56,7 @@ clean:
 
 tests:
 	make install
-	sudo /usr/sbin/mbpfan -f -v -t
+	/usr/sbin/mbpfan -f -v -t
 
 uninstall:
 	rm /usr/sbin/mbpfan
