@@ -136,6 +136,7 @@ To add the script to the default runlevels, run the following as root:
 An init file is available for gentoo users: mbpfan.init.gentoo
 To install, run as root:
 
+    chmod +x mbpfan.init.gentoo
     cp mbpfan.init.gentoo /etc/init.d/mbpfan
 
 To automatically run mbpfan at boot, run as root:

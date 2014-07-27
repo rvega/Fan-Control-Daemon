@@ -517,8 +517,6 @@ void mbpfan()
         }
     }
 
-    sleep(polling_interval);
-
     step_up = (float)( max_fan_speed - min_fan_speed ) /
               (float)( ( max_temp - high_temp ) * ( max_temp - high_temp + 1 ) / 2 );
 
