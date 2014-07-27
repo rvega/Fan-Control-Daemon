@@ -59,8 +59,9 @@ int max_temp = 86;   // do not set it > 90
 
 int polling_interval = 7;
 
-typedef struct s_sensors t_sensors;
-typedef struct s_fans t_fans;
+t_sensors* sensors = NULL;
+t_fans* fans = NULL;
+
 
 bool is_legacy_kernel()
 {
@@ -243,7 +244,7 @@ t_fans *retrieve_fans()
     int counter = 0;
     int fans_found = 0;
 
-    for(int counter = 0; counter<10; counter++) {
+    for(counter = 0; counter<10; counter++) {
 
         path_output = (char*) malloc(sizeof( char ) * path_min_size);
         path_output[0] = '\0';
@@ -313,7 +314,7 @@ t_fans *retrieve_fans()
 }
 
 
-void set_fans_man(t_fans *fans)
+static void set_fans_mode(t_fans *fans, int mode)
 {
 
     t_fans *tmp = fans;
@@ -323,12 +324,24 @@ void set_fans_man(t_fans *fans)
         file = fopen(tmp->fan_manual_path, "rw+");
 
         if(file != NULL) {
-            fprintf(file, "%d", 1);
+            fprintf(file, "%d", mode);
             fclose(file);
         }
 
         tmp = tmp->next;
     }
+}
+
+void set_fans_man(t_fans *fans)
+{
+
+    set_fans_mode(fans, 1);
+}
+
+void set_fans_auto(t_fans *fans)
+{
+
+    set_fans_mode(fans, 0);
 }
 
 t_sensors *refresh_sensors(t_sensors *sensors)
@@ -488,8 +501,8 @@ void mbpfan()
 
     retrieve_settings(NULL);
 
-    t_sensors* sensors = retrieve_sensors();
-    t_fans* fans = retrieve_fans();
+    sensors = retrieve_sensors();
+    fans = retrieve_fans();
 
     set_fans_man(fans);
     new_temp = get_temp(sensors);
