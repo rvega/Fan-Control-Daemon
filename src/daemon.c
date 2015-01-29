@@ -72,6 +72,31 @@ int delete_pid()
     return remove(PROGRAM_PID);
 }
 
+static void cleanup_and_exit(int exit_code)
+{
+	delete_pid();
+	set_fans_auto(fans);
+	
+	s_fans *next_fan;
+	while (fans != NULL) {
+		next_fan = fans->next;
+		free(fans->fan_output_path);
+		free(fans->fan_manual_path);
+		free(fans);
+		fans = next_fan;
+	}
+
+	s_sensors *next_sensor;
+	while (sensors != NULL) {
+		next_sensor = sensors->next;
+		free(sensors->path);
+		free(sensors);
+		sensors = next_sensor;
+	}
+
+	exit(exit_code);
+}
+
 void signal_handler(int signal)
 {
 
@@ -83,25 +108,15 @@ void signal_handler(int signal)
 
     case SIGTERM:
         syslog(LOG_WARNING, "Received SIGTERM signal.");
-        delete_pid();
-        //TODO: free resources
-        set_fans_auto(fans);
-        exit(EXIT_SUCCESS);
-        break;
+        cleanup_and_exit(EXIT_SUCCESS);
 
     case SIGINT:
         syslog(LOG_WARNING, "Received SIGINT signal.");
-        delete_pid();
-        //TODO: free resources
-        set_fans_auto(fans);
-        exit(EXIT_SUCCESS);
+        cleanup_and_exit(EXIT_SUCCESS);
 
     case SIGSTOP:
         syslog(LOG_WARNING, "Received SIGSTOP signal.");
-        delete_pid();
-        //TODO: free resources
-        set_fans_auto(fans);
-        exit(EXIT_SUCCESS);
+        cleanup_and_exit(EXIT_SUCCESS);
 
     default:
         syslog(LOG_WARNING, "Unhandled signal (%d) %s", signal, strsignal(signal));
