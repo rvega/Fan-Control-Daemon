@@ -55,6 +55,12 @@ int read_pid()
     if(file != NULL) {
         fscanf(file, "%d", &pid);
         fclose(file);
+        if (kill(pid, 0) == -1 && errno == ESRCH)
+        { /* a process with such a pid does not exist, remove the pid file */
+          if (remove(PROGRAM_PID) ==  0) {
+            return -1;
+          }
+        }
         return pid;
     }
 
