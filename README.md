@@ -50,7 +50,13 @@ This section reports those models where mbpfan was tested successfully. It does 
 Warning
 -------
 Be sure to load the kernel modules **applesmc** and **coretemp**.
+These modules are often automatically loaded when booting up GNU/Linux on a Macbook. If that is not the case, you should make sure to load them at system startup. This is _usually_ achieved by inserting the following two lines in the file `/etc/modules`
+```
+coretemp
+applesmc
+```
 
+Please check the relevant documentation of your GNU/Linux distribution.
 
 Arch Linux
 ---------
