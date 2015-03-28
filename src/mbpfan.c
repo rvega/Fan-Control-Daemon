@@ -71,9 +71,9 @@ bool is_legacy_kernel()
     char *str_kernel_version;
     str_kernel_version = strtok(kernel.release, ".");
 
-    if (atoi(str_kernel_version) != 3){
-        syslog(LOG_INFO, "mbpfan detected a non 3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
-        printf("mbpfan detected a non 3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
+    if (atoi(str_kernel_version) < 3){
+        syslog(LOG_INFO, "mbpfan detected a pre-3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
+        printf("mbpfan detected a pre-3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
         exit(EXIT_FAILURE);
     }
 
@@ -90,7 +90,7 @@ bool is_legacy_kernel()
         }
     }
 
-    return (kernel_version < 15);
+    return (atoi(kernel.release) == 3 && kernel_version < 15);
 }
 
 
