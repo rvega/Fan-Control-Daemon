@@ -46,6 +46,11 @@ This section reports those models where mbpfan was tested successfully. It does 
 - MacBook Pro 2,2 15"  (Intel Core 2 Duo - Linux 3.4.4)
 - MacBook Air 5,2 (unknown)
 
+Tested iMac Models
+------------------
+This section reports the iMac models where mbpfan was tested successfully.
+
+- iMac5,1 17" (Intel T7400 (Core 2 Duo) - Linux 14.04 Ubuntu)
 
 Warning
 -------
