@@ -36,6 +36,7 @@ Tested Macbook Models
 ---------------------
 This section reports those models where mbpfan was tested successfully. It does not necessarily mean that the daemon does not work on non-listed models. 
 
+- MacBook Pro 12,1 13"  (Intel i5 - Linux 4.20)
 - MacBook Pro 11,1 13"  (Intel i5 - Linux 3.14, Linux 3.15)
 - MacBook Pro 9,2 13"  (Intel i5/i7 - Linux 3.10)
 - MacBook Pro 8,2 15"  (Intel i7 - Linux 3.6.2)
