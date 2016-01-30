@@ -76,6 +76,8 @@ Ubuntu
 Install the ```build-essential``` package.
 Then, refer to the Generic Install Instructions.
 
+Otherwise, a step-by-step [tutorial for beginners is available on my website](https://ineed.coffee/3838/a-beginners-mbpfan-tutorial-for-ubuntu/).
+
 
 Generic Install Instructions
 -------------------------
