@@ -129,7 +129,7 @@ t_sensors *retrieve_sensors()
         int counter;
         for (counter = 0; counter < 10; counter++) {
 
-            char hwmon_path[strlen(path_begin)+1];
+            char hwmon_path[strlen(path_begin)+3];
 
             sprintf(hwmon_path, "%s%d", path_begin, counter);
 
