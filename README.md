@@ -95,7 +95,7 @@ It copies mbpfan to /usr/sbin and mbpfan.conf to /etc
 
 Run The Tests (Recommended)
 ---------------------------
-It is recommended to run the tests after installing the program
+It is recommended to run the tests after installing the program. Please run the following command _from within the source directory_.
 
     sudo ./bin/mbpfan -t
 
