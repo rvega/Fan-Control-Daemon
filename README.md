@@ -164,6 +164,7 @@ As a special bonus, a service file for systemd is also included. To use it,
 execute the following (as root):
 
     sudo cp mbpfan.service /etc/systemd/system/
+    sudo systemctl enable mbpfan.service
     sudo systemctl daemon-reload
     sudo systemctl start mbpfan.service
 
