@@ -79,6 +79,16 @@ Then, refer to the Generic Install Instructions.
 
 Otherwise, a step-by-step [tutorial for beginners is available on my website](https://ineed.coffee/3838/a-beginners-mbpfan-tutorial-for-ubuntu/).
 
+Gentoo
+------
+
+Type the following command to add the overlay
+
+    sudo layman -a andjscott
+
+Then install it
+
+    sudo emerge -av mbpfan
 
 Generic Install Instructions
 -------------------------
@@ -148,11 +158,6 @@ To add the script to the default runlevels, run the following as root:
     chkconfig --level 2345 mbpfan on && chkconfig --level 016 mbpfan off
 
 **Gentoo**
-An init file is available for gentoo users: mbpfan.init.gentoo
-To install, run as root:
-
-    chmod +x mbpfan.init.gentoo
-    cp mbpfan.init.gentoo /etc/init.d/mbpfan
 
 To automatically run mbpfan at boot, run as root:
 
