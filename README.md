@@ -132,9 +132,17 @@ If installed and using the init file, run with (Ubuntu example)
 Starting at boot
 ----------------
 **Ubuntu**
-For upstart based init systems (Ubuntu), an example upstart job has been
-provided for use in place of the LSB-style init script. 
-To use, execute:
+
+For systemd based init systems (Ubuntu 16.04+), the file mbpfan.service
+has been provided.
+For using it, execute:
+
+    sudo cp mbpfan.service /etc/systemd/system/
+    sudo systemctl enable mbpfan.service
+
+
+For upstart based init systems (Ubuntu before 16.04), an example upstart job has been provided. 
+For using it, execute:
 
     sudo cp mbpfan.upstart /etc/init/mbpfan.conf
     sudo start mbpfan
