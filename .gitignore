@@ -1,0 +1,23 @@
+# Intellij
+.idea
+*.iml
+
+# Eclipse
+.cproject
+.project
+
+# Object files
+*.o
+bin/*
+
+# Libraries
+*.lib
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+
+# Executables
+*.exe
+*.out
+

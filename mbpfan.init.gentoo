@@ -1,0 +1,18 @@
+#!/sbin/runscript
+
+depend() {
+	use logger
+}
+
+start() {
+	ebegin "Starting mbpfan"
+	start-stop-daemon --start --quiet --exec /usr/sbin/mbpfan
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping mbpfan"
+	start-stop-daemon --stop --quiet --exec /usr/sbin/mbpfan
+	eend $?
+}
+

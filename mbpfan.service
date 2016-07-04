@@ -1,0 +1,14 @@
+[Unit]
+Description=A fan manager daemon for MacBook Pro
+After=syslog.target
+After=sysinit.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/mbpfan -fv
+ExecReload=/usr/bin/kill -HUP $MAINPID
+PIDFile=/var/run/mbpfan.pid
+Restart=always
+
+[Install]
+WantedBy=sysinit.target
