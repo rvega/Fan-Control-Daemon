@@ -48,11 +48,12 @@ This section reports those models where mbpfan was tested successfully. It does 
 - MacBook Air 5,2 (unknown)
 - MacBook 1,1 (Intel Core Duo - Linux 3.16)
 
-Tested iMac Models
+Tested iMac/Mini Models
 ------------------
 This section reports the iMac models where mbpfan was tested successfully.
 
 - iMac5,1 17" (Intel T7400 (Core 2 Duo) - Linux 14.04 Ubuntu)
+- Mac Mini 2,1 (Core 2 Duo - Linux 4.4.0)
 
 Warning
 -------
