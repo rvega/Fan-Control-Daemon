@@ -50,9 +50,9 @@ This section reports those models where mbpfan was tested successfully. It does 
 
 Tested iMac/Mini Models
 ------------------
-This section reports the iMac models where mbpfan was tested successfully.
+This section reports the iMac/Mac-mini models where mbpfan was tested successfully.
 
-- iMac 12,1 21.5" (Intel i5 - Linux 4.6.4)
+- iMac 12,1 21.5" (Intel i7 - Linux 4.6.4)
 - iMac 5,1 17" (Intel T7400 (Core 2 Duo) - Linux 14.04 Ubuntu)
 - Mac Mini 2,1 (Core 2 Duo - Linux 4.4.0)
 
