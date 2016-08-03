@@ -1,3 +1,9 @@
+## Deprecated.
+
+I'm not maintaining this anymore but [dgraziotin's fork](https://github.com/dgraziotin/mbpfan) is quite active. Go there :)
+
+## Old Readme:
+
 This is a daemon that uses input from coretemp module and sets the fan speed using the applesmc module. It includes a PKGBUILD for easy installation in Arch Linux.
 
 Based on:
