@@ -2,8 +2,8 @@
  *  mbpfan.c - automatically control fan for MacBook Pro
  *  Copyright (C) 2010  Allan McRae <allan@archlinux.org>
  *  Modifications by Rafael Vega <rvega@elsoftwarehamuerto.org>
- *  Modifications (2012) by Daniel Graziotin <daniel@ineed.coffee>
  *  Modifications (2012) by Ismail Khatib <ikhatib@gmail.com>
+ *  Modifications (2012-present) by Daniel Graziotin <daniel@ineed.coffee> [CURRENT MAINTAINER]
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,7 +15,6 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  2014-06-22 - v1.7.0
  *
  *  Notes:
  *    Assumes any number of processors and fans (max. 10)
@@ -23,10 +22,7 @@
  *    Requires coretemp and applesmc kernel modules to be loaded.
  *    Requires root use
  *
- *  Tested models:
- *    MacBook Pro 8.1 13"  (Intel i7 - Linux 3.2)
- *    MacBook Pro 6,2 15"  (Intel i7 - Linux 3.2)
- *    MacBook Pro 2,2 15"  (Intel Core 2 Duo - Linux 3.4.4)
+ *  Tested models: see README.md
  */
 
 

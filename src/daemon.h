@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) (2012) Daniel Graziotin <daniel@ineed.coffee>
+ *  Copyright (C) (2012-present) Daniel Graziotin <daniel@ineed.coffee>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
