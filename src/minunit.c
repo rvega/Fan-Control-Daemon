@@ -151,7 +151,7 @@ static const char *test_config_file()
 static const char *test_settings()
 {
     retrieve_settings("./mbpfan.conf.test1");
-    mu_assert("min_fan_speed value is not 6200", min_fan_speed == 6200);
+    mu_assert("max_fan_speed value is not 6200", max_fan_speed == 6200);
     mu_assert("polling_interval is not 1", polling_interval == 1);
     retrieve_settings("./mbpfan.conf");
     mu_assert("min_fan_speed value is not 2000", min_fan_speed == 2000);
@@ -188,6 +188,7 @@ static const char *test_settings_reload()
 {
     signal(SIGHUP, handler);
     retrieve_settings("./mbpfan.conf");
+    printf("Testing the _supplied_ mbpfan.conf (not the one you are using)..\n");
     mu_assert("min_fan_speed value is not 2000 before SIGHUP", min_fan_speed == 2000);
     mu_assert("polling_interval is not 7 before SIHUP", polling_interval == 7);
     raise(SIGHUP);
