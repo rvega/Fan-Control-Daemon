@@ -1,11 +1,11 @@
-Fan-Control-Daemon
+mbpfan
 ====================
 
 Introduction
 ---------------------
 This is an enhanced version of [Allan McRae mbpfan](http://allanmcrae.com/2010/05/simple-macbook-pro-fan-daemon/)
 
-Fan-Control-Daemon is a daemon that uses input from coretemp module and sets the fan speed using the applesmc module. 
+mbpfan is a daemon that uses input from coretemp module and sets the fan speed using the applesmc module. 
 This enhanced version assumes any number of processors and fans (max. 10).
 
 *  It only uses the temperatures from the processors as input.
@@ -52,6 +52,7 @@ Tested iMac/Mini Models
 ------------------
 This section reports the iMac/Mac-mini models where mbpfan was tested successfully.
 
+- iMac Retina 16.2 21.5" (Intel i5 - Linux 4.4.0 Ubuntu 16.04)  
 - iMac 12,1 21.5" (Intel i7 - Linux 4.6.4)
 - iMac 5,1 17" (Intel T7400 (Core 2 Duo) - Linux 14.04 Ubuntu)
 - Mac Mini 2,1 (Core 2 Duo - Linux 4.4.0)
@@ -102,7 +103,8 @@ Install with
 
     sudo make install
 
-It copies mbpfan to /usr/sbin and mbpfan.conf to /etc
+It copies mbpfan to /usr/sbin, mbpfan.conf to /etc, 
+README.md to /usr/share/doc/mbpfan, and mbpfan.8.gz to /usr/share/man/man8
 
 
 Run The Tests (Recommended)
