@@ -95,6 +95,7 @@ Then install it
 
     sudo emerge -av mbpfan
 
+
 Generic Install Instructions
 -------------------------
 Compile with
@@ -105,8 +106,27 @@ Install with
 
     sudo make install
 
-It copies mbpfan to /usr/sbin, mbpfan.conf to /etc, 
+It copies mbpfan to /usr/sbin, mbpfan.conf to /etc (and overwrites existing files), 
 README.md to /usr/share/doc/mbpfan, and mbpfan.8.gz to /usr/share/man/man8
+
+Run the tests now, see two sections below.
+
+If you would like to compile with Clang instead of GCC, see the next section.
+
+Compile with Clang (experimental)
+---------------------------------
+We are providing an initial experimental support for [Clang and LLVM](http://clang.llvm.org/).
+Please go to the next section if you are following a standard installation procedure (most people do).
+
+Edit the 'Makefile' and replace G++ with clang++
+
+Please run
+
+    make clean
+
+Before attempting to compile again with Clang.
+
+Tested and working with Clang 3.8 and 3.9.
 
 
 Run The Tests (Recommended)
