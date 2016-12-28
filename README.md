@@ -110,6 +110,7 @@ README.md to /usr/share/doc/mbpfan, and mbpfan.8.gz to /usr/share/man/man8
 Compile with Clang
 -------------------------
 Edit the 'Makefile' and replace G++ with clang++
+
 Tested and working with Clang 3.9
 
 Run The Tests (Recommended)
