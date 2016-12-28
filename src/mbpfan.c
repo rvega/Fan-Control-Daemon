@@ -557,6 +557,7 @@ void mbpfan()
 
         if(verbose) {
             printf("Sleeping for %d seconds\n", polling_interval);
+            fflush(stdout);
 
             if(daemonize) {
                 syslog(LOG_INFO, "Sleeping for %d seconds", polling_interval);
