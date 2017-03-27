@@ -4,7 +4,7 @@
  *  Modifications by Rafael Vega <rvega@elsoftwarehamuerto.org>
  *  Modifications (2012) by Ismail Khatib <ikhatib@gmail.com>
  *  Modifications (2012-present) by Daniel Graziotin <daniel@ineed.coffee> [CURRENT MAINTAINER]
- *  Modifications (2017-present) by Robert Musial <rmmm@member.fsf.org>
+ *  Modifications (2017-present) by Robert Musial <rmusial@fastmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -75,20 +75,30 @@ bool is_legacy_kernel()
         exit(EXIT_FAILURE);
     }
 
-    str_kernel_version = strtok(NULL, ".");
-    int kernel_version = atoi(str_kernel_version);
+    
+    // thanks http://stackoverflow.com/questions/18192998/plain-c-opening-a-directory-with-fopen
+    fopen("/sys/devices/platform/coretemp.0/hwmon", "wb");
 
-    if(verbose) {
-        printf("Detected kernel version: %s\n", kernel.release);
-        printf("Detected kernel minor revision: %s\n", str_kernel_version);
-
-        if(daemonize) {
-            syslog(LOG_INFO, "Kernel version: %s", kernel.release);
-            syslog(LOG_INFO, "Detected kernel minor revision: %s", str_kernel_version);
-        }
+    if (errno == EISDIR) {
+        return 0;
+    } else {
+        return 1;
     }
 
-    return (atoi(kernel.release) == 3 && kernel_version < 15);
+    // str_kernel_version = strtok(NULL, ".");
+    // int kernel_version = atoi(str_kernel_version);
+
+    // if(verbose) {
+    //     printf("Detected kernel version: %s\n", kernel.release);
+    //     printf("Detected kernel minor revision: %s\n", str_kernel_version);
+
+    //     if(daemonize) {
+    //         syslog(LOG_INFO, "Kernel version: %s", kernel.release);
+    //         syslog(LOG_INFO, "Detected kernel minor revision: %s", str_kernel_version);
+    //     }
+    // }
+
+    // return (atoi(kernel.release) == 3 && kernel_version < 15);
 }
 
 

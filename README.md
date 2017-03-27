@@ -30,7 +30,8 @@ Supported distributions:
 - RedHat
 - CentOS
 - Gentoo
-
+- Alpine
+- Trisquel
 
 Tested Macbook Models
 ---------------------
