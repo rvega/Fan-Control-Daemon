@@ -17,8 +17,6 @@ LIBS = -lm
 LIBPATH =
 CFLAGS +=  $(COPT) -g $(INCLUDES) #-Wall
 LDFLAGS += $(LIBPATH) -g $(LIBS) #-Wall
-DEP = dep
-
 
 OBJS := $(patsubst %.$(C),%.$(OBJ),$(wildcard $(SOURCE_PATH)*.$(C)))
 
