@@ -114,7 +114,8 @@ README.md to /usr/share/doc/mbpfan, and mbpfan.8.gz to /usr/share/man/man8
 Run the tests now, see two sections below.
 
 If you would like to compile with Clang instead of GCC, simply set your system's
-default compiler to be Clang (tested with Clang 3.8)
+default compiler to be Clang. Tested with Clang 3.8 and 3.9. Tested with Clang
+4.0 along with llvm-lld (The LLVM Linker). 
 
 
 Run The Tests (Recommended)
