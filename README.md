@@ -89,14 +89,9 @@ Otherwise, a step-by-step [tutorial for beginners is available on my website](ht
 Gentoo
 ------
 
-Type the following command to add the overlay
+Install the ```mbpfan``` package with:
 
-    sudo layman -a andjscott
-
-Then install it
-
-    sudo emerge -av mbpfan
-
+    sudo emerge -av app-laptop/mbpfan
 
 Generic Install Instructions
 -------------------------
