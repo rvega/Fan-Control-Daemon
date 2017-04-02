@@ -46,7 +46,7 @@ typedef struct s_fans t_fans;
 /**
  * Return true if the kernel is < 3.15.0
  */
-bool is_legacy_kernel();
+bool is_legacy_sensors_path();
 
 /**
  * Tries to use the settings located in

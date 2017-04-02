@@ -61,7 +61,7 @@ t_sensors* sensors = NULL;
 t_fans* fans = NULL;
 
 
-bool is_legacy_kernel()
+bool is_legacy_sensors_path()
 {
     struct utsname kernel;
     uname(&kernel);
@@ -75,31 +75,31 @@ bool is_legacy_kernel()
         exit(EXIT_FAILURE);
     }
 
-    // possible fix for https://github.com/dgraziotin/mbpfan/issues/92
-    // to be soon investigated.
+    
     // thanks http://stackoverflow.com/questions/18192998/plain-c-opening-a-directory-with-fopen
-    // fopen("/sys/devices/platform/coretemp.0/hwmon", "wb");
+    fopen("/sys/devices/platform/coretemp.0/hwmon", "wb");
 
-    // if (errno == EISDIR) {
-    //     return 0;
-    // } else {
-    //     return 1;
-    // }
-
-    str_kernel_version = strtok(NULL, ".");
-    int kernel_version = atoi(str_kernel_version);
-
-    if(verbose) {
-        printf("Detected kernel version: %s\n", kernel.release);
-        printf("Detected kernel minor revision: %s\n", str_kernel_version);
-
-        if(daemonize) {
-            syslog(LOG_INFO, "Kernel version: %s", kernel.release);
-            syslog(LOG_INFO, "Detected kernel minor revision: %s", str_kernel_version);
-        }
+    if (errno == EISDIR) {
+        return 0;
+    } else {
+        return 1;
     }
 
-    return (atoi(kernel.release) == 3 && kernel_version < 15);
+    // 
+    // str_kernel_version = strtok(NULL, ".");
+    // int kernel_version = atoi(str_kernel_version);
+
+    // if(verbose) {
+    //     printf("Detected kernel version: %s\n", kernel.release);
+    //     printf("Detected kernel minor revision: %s\n", str_kernel_version);
+
+    //     if(daemonize) {
+    //         syslog(LOG_INFO, "Kernel version: %s", kernel.release);
+    //         syslog(LOG_INFO, "Detected kernel minor revision: %s", str_kernel_version);
+    //     }
+    // }
+
+    // return (atoi(kernel.release) == 3 && kernel_version < 15);
 }
 
 
@@ -112,7 +112,7 @@ t_sensors *retrieve_sensors()
     char *path = NULL;
     char *path_begin = NULL;
 
-    if (is_legacy_kernel()) {
+    if (is_legacy_sensors_path()) {
         if(verbose) {
             printf("Using legacy sensor path for kernel < 3.15.0\n");
 
@@ -126,10 +126,10 @@ t_sensors *retrieve_sensors()
     } else {
 
         if(verbose) {
-            printf("Using new sensor path for kernel >= 3.0.15\n");
+            printf("Using new sensor path for kernel >= 3.0.15 or some CentOS versions with kernel 3.10.0\n");
 
             if(daemonize) {
-                syslog(LOG_INFO, "Using new sensor path for kernel >= 3.0.15");
+                syslog(LOG_INFO, "Using new sensor path for kernel >= 3.0.15 or some CentOS versions with kernel 3.10.0 ");
             }
         }
 
