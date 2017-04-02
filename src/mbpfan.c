@@ -75,30 +75,31 @@ bool is_legacy_kernel()
         exit(EXIT_FAILURE);
     }
 
-    
+    // possible fix for https://github.com/dgraziotin/mbpfan/issues/92
+    // to be soon investigated.
     // thanks http://stackoverflow.com/questions/18192998/plain-c-opening-a-directory-with-fopen
-    fopen("/sys/devices/platform/coretemp.0/hwmon", "wb");
+    // fopen("/sys/devices/platform/coretemp.0/hwmon", "wb");
 
-    if (errno == EISDIR) {
-        return 0;
-    } else {
-        return 1;
-    }
-
-    // str_kernel_version = strtok(NULL, ".");
-    // int kernel_version = atoi(str_kernel_version);
-
-    // if(verbose) {
-    //     printf("Detected kernel version: %s\n", kernel.release);
-    //     printf("Detected kernel minor revision: %s\n", str_kernel_version);
-
-    //     if(daemonize) {
-    //         syslog(LOG_INFO, "Kernel version: %s", kernel.release);
-    //         syslog(LOG_INFO, "Detected kernel minor revision: %s", str_kernel_version);
-    //     }
+    // if (errno == EISDIR) {
+    //     return 0;
+    // } else {
+    //     return 1;
     // }
 
-    // return (atoi(kernel.release) == 3 && kernel_version < 15);
+    str_kernel_version = strtok(NULL, ".");
+    int kernel_version = atoi(str_kernel_version);
+
+    if(verbose) {
+        printf("Detected kernel version: %s\n", kernel.release);
+        printf("Detected kernel minor revision: %s\n", str_kernel_version);
+
+        if(daemonize) {
+            syslog(LOG_INFO, "Kernel version: %s", kernel.release);
+            syslog(LOG_INFO, "Detected kernel minor revision: %s", str_kernel_version);
+        }
+    }
+
+    return (atoi(kernel.release) == 3 && kernel_version < 15);
 }
 
 
