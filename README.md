@@ -30,7 +30,8 @@ Supported distributions:
 - RedHat
 - CentOS
 - Gentoo
-
+- Alpine
+- Trisquel
 
 Tested Macbook Models
 ---------------------
@@ -112,22 +113,9 @@ README.md to /usr/share/doc/mbpfan, and mbpfan.8.gz to /usr/share/man/man8
 
 Run the tests now, see two sections below.
 
-If you would like to compile with Clang instead of GCC, see the next section.
-
-Compile with Clang (experimental)
----------------------------------
-We are providing an initial experimental support for [Clang and LLVM](http://clang.llvm.org/).
-Please go to the next section if you are following a standard installation procedure (most people do).
-
-Edit the 'Makefile' and replace G++ with clang++
-
-Please run
-
-    make clean
-
-Before attempting to compile again with Clang.
-
-Tested and working with Clang 3.8 and 3.9.
+If you would like to compile with Clang instead of GCC, simply set your system's
+default compiler to be Clang. Tested with Clang 3.8 and 3.9. Tested with Clang
+4.0 along with llvm-lld (The LLVM Linker). 
 
 
 Run The Tests (Recommended)

@@ -4,6 +4,7 @@
  *  Modifications by Rafael Vega <rvega@elsoftwarehamuerto.org>
  *  Modifications (2012) by Ismail Khatib <ikhatib@gmail.com>
  *  Modifications (2012-present) by Daniel Graziotin <daniel@ineed.coffee> [CURRENT MAINTAINER]
+ *  Modifications (2017-present) by Robert Musial <rmusial@fastmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,6 +33,7 @@
 #include <string.h>
 #include <math.h>
 #include <syslog.h>
+#include <stdbool.h>
 #include <sys/utsname.h>
 #include <sys/errno.h>
 #include "mbpfan.h"
@@ -72,6 +74,17 @@ bool is_legacy_kernel()
         printf("mbpfan detected a pre-3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
         exit(EXIT_FAILURE);
     }
+
+    // possible fix for https://github.com/dgraziotin/mbpfan/issues/92
+    // to be soon investigated.
+    // thanks http://stackoverflow.com/questions/18192998/plain-c-opening-a-directory-with-fopen
+    // fopen("/sys/devices/platform/coretemp.0/hwmon", "wb");
+
+    // if (errno == EISDIR) {
+    //     return 0;
+    // } else {
+    //     return 1;
+    // }
 
     str_kernel_version = strtok(NULL, ".");
     int kernel_version = atoi(str_kernel_version);
