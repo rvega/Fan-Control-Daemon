@@ -228,6 +228,9 @@ t_sensors *retrieve_sensors()
         exit(EXIT_FAILURE);
     }
 
+    free(path_begin);
+    path_begin = NULL;
+
     return sensors_head;
 }
 
