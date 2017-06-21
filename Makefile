@@ -25,7 +25,9 @@ OBJS := $(patsubst %.$(C),%.$(OBJ),$(wildcard $(SOURCE_PATH)*.$(C)))
 	@echo Compiling $(basename $<)...
 	$(CC) -c $(CFLAGS) $< $(OBJFLAG)$@
 
-all: $(OBJS)
+all: $(BIN)
+
+$(BIN): $(OBJS)
 	@echo Linking...
 	$(CC) $(LDFLAGS) $^ $(LIBS) $(BINFLAG) $(BIN)
 
@@ -43,8 +45,7 @@ uninstall:
 	rm /usr/share/man/man8/mbpfan.8.gz
 	rm -rf /usr/share/doc/mbpfan
 
-install:
-	make
+install: $(BIN)
 	install -d $(DESTDIR)/usr/sbin
 	install -d $(DESTDIR)/etc
 	install -d $(DESTDIR)/lib/systemd/system
