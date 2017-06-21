@@ -59,7 +59,7 @@ void check_requirements()
 
     /**
      * Check for root
-    */
+     */
 
     uid_t uid=getuid(), euid=geteuid();
 
@@ -71,42 +71,28 @@ void check_requirements()
 
     /**
       * Check for coretemp and applesmc modules
-      * Credits: -http://stackoverflow.com/questions/12978794
       */
-    FILE *fd = popen("lsmod | grep coretemp", "r");
-    char buf[16];
+    DIR* dir = opendir(CORETEMP_PATH);
 
-    if (!(fread (buf, 1, sizeof (buf), fd) > 0)) {
-        DIR* dir = opendir(CORETEMP_PATH);
-
-        if (ENOENT == errno) {
-            syslog(LOG_ERR, "%s needs coretemp support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
-            printf("%s needs coretemp module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
-            exit(EXIT_FAILURE);
-        }
-
-        closedir(dir);
-
+    if (ENOENT == errno) {
+        syslog(LOG_ERR, "%s needs coretemp support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
+        printf("%s needs coretemp module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
+        exit(EXIT_FAILURE);
     }
 
-    pclose(fd);
+    closedir(dir);
 
-    fd = popen("lsmod | grep applesmc", "r");
 
-    if (!(fread (buf, 1, sizeof (buf), fd) > 0)) {
-        DIR* dir = opendir(APPLESMC_PATH);
+    dir = opendir(APPLESMC_PATH);
 
-        if (ENOENT == errno) {
-            syslog(LOG_ERR, "%s needs applesmc support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
-            printf("%s needs applesmc module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
-            exit(EXIT_FAILURE);
-        }
-
-        closedir(dir);
-
+    if (ENOENT == errno) {
+        syslog(LOG_ERR, "%s needs applesmc support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
+        printf("%s needs applesmc module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
+        exit(EXIT_FAILURE);
     }
 
-    pclose(fd);
+    closedir(dir);
+
 
 }
 
