@@ -85,6 +85,8 @@ void check_requirements()
             exit(EXIT_FAILURE);
         }
 
+        closedir(dir);
+
     }
 
     pclose(fd);
@@ -99,6 +101,8 @@ void check_requirements()
             printf("%s needs applesmc module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
             exit(EXIT_FAILURE);
         }
+
+        closedir(dir);
 
     }
 
