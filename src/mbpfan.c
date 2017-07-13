@@ -27,6 +27,7 @@
  */
 
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -60,6 +61,29 @@ int polling_interval = 7;
 t_sensors* sensors = NULL;
 t_fans* fans = NULL;
 
+
+static char *smprintf(const char *fmt, ...) __attribute__((format (printf, 1, 2)));
+static char *smprintf(const char *fmt, ...)
+{
+    char *buf;
+    int cnt;
+    va_list ap;
+
+    // find buffer length
+    va_start(ap, fmt);
+    cnt = vsnprintf(NULL, 0, fmt, ap);
+    va_end(ap);
+    if (cnt < 0) {
+        return NULL;
+    }
+
+    // create and write to buffer
+    buf = malloc(cnt + 1);
+    va_start(ap, fmt);
+    vsnprintf(buf, cnt + 1, fmt, ap);
+    va_end(ap);
+    return buf;
+}
 
 bool is_legacy_sensors_path()
 {
@@ -147,9 +171,7 @@ t_sensors *retrieve_sensors()
 
             if (errno == EISDIR) {
 
-                path_begin = (char*) malloc(sizeof( char ) * (strlen(hwmon_path) + strlen("/temp") + 1));
-                strcpy(path_begin, hwmon_path);
-                strcat(path_begin, "/temp");
+                path_begin = smprintf("%s/temp", hwmon_path);
 
                 if(verbose) {
                     printf("Found hwmon path at %s\n", path_begin);
@@ -167,28 +189,17 @@ t_sensors *retrieve_sensors()
 
     const char *path_end = "_input";
 
-    int path_size = strlen(path_begin) + strlen(path_end) + 2;
-    char number[2];
-    sprintf(number,"%d",0);
-
     int sensors_found = 0;
 
     int counter = 0;
     for(counter = 0; counter<10; counter++) {
-        path = (char*) malloc(sizeof( char ) * path_size);
-
-        sprintf(number,"%d",counter);
-        path[0] = '\0';
-        strncat( path, path_begin, strlen(path_begin) );
-        strncat( path, number, strlen(number) );
-        strncat( path, path_end, strlen(path_begin) );
+        path = smprintf("%s%d%s", path_begin, counter, path_end);
 
         FILE *file = fopen(path, "r");
 
         if(file != NULL) {
             s = (t_sensors *) malloc( sizeof( t_sensors ) );
-            s->path = (char *) malloc(sizeof( char ) * path_size);
-            strcpy(s->path, path);
+            s->path = strdup(path);
             fscanf(file, "%d", &s->temperature);
 
             if (sensors_head == NULL) {
@@ -248,39 +259,20 @@ t_fans *retrieve_fans()
     const char *path_output_end = "_output";
     const char *path_man_end = "_manual";
 
-    int path_min_size = strlen(path_begin) + strlen(path_output_end) + 2;
-    int path_man_size = strlen(path_begin) + strlen(path_man_end) + 2;
-    char number[2];
-    sprintf(number,"%d",0);
-
     int counter = 0;
     int fans_found = 0;
 
     for(counter = 0; counter<10; counter++) {
 
-        path_output = (char*) malloc(sizeof( char ) * path_min_size);
-        path_output[0] = '\0';
-        path_manual = (char*) malloc(sizeof( char ) * path_man_size);
-        path_manual[0] = '\0';
-        sprintf(number,"%d",counter);
-
-        strncat( path_output, path_begin, strlen(path_begin) );
-        strncat( path_output, number, strlen(number) );
-        strncat( path_output, path_output_end, strlen(path_begin) );
-
-        strncat( path_manual, path_begin, strlen(path_begin) );
-        strncat( path_manual, number, strlen(number) );
-        strncat( path_manual, path_man_end, strlen(path_begin) );
-
+        path_output = smprintf("%s%d%s", path_begin, counter, path_output_end);
+        path_manual = smprintf("%s%d%s", path_begin, counter, path_man_end);
 
         FILE *file = fopen(path_output, "w");
 
         if(file != NULL) {
             fan = (t_fans *) malloc( sizeof( t_fans ) );
-            fan->fan_output_path = (char *) malloc(sizeof( char ) * path_min_size);
-            fan->fan_manual_path = (char *) malloc(sizeof( char ) * path_man_size);
-            strcpy(fan->fan_output_path, path_output);
-            strcpy(fan->fan_manual_path, path_manual);
+            fan->fan_output_path = strdup(path_output);
+            fan->fan_manual_path = strdup(path_manual);
 
             if (fans_head == NULL) {
                 fans_head = fan;
