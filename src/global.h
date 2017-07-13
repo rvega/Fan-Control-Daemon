@@ -8,13 +8,15 @@ extern const char* PROGRAM_NAME;
 extern const char* PROGRAM_PID;
 
 struct s_sensors {
+    FILE* file;
     char* path;
     unsigned int temperature;
     struct s_sensors *next;
 };
 
 struct s_fans {
-    char* path;
+    FILE* file;
+    char* path;  // TODO: unused
     char* fan_output_path;
     char* fan_manual_path;
     struct s_fans *next;
