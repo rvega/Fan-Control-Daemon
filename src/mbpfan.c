@@ -206,7 +206,7 @@ t_sensors *retrieve_sensors()
                 tmp->next->next = NULL;
             }
 
-            fclose(file);
+            s->file = file;
             sensors_found++;
         }
 
@@ -273,7 +273,7 @@ t_fans *retrieve_fans()
         strncat( path_manual, path_man_end, strlen(path_begin) );
 
 
-        FILE *file = fopen(path_output, "r");
+        FILE *file = fopen(path_output, "w");
 
         if(file != NULL) {
             fan = (t_fans *) malloc( sizeof( t_fans ) );
@@ -297,7 +297,7 @@ t_fans *retrieve_fans()
                 tmp->next->next = NULL;
             }
 
-            fclose(file);
+            fan->file = file;
             fans_found++;
         }
 
@@ -362,11 +362,11 @@ t_sensors *refresh_sensors(t_sensors *sensors)
     t_sensors *tmp = sensors;
 
     while(tmp != NULL) {
-        FILE *file = fopen(tmp->path, "r");
-
-        if(file != NULL) {
-            fscanf(file, "%d", &tmp->temperature);
-            fclose(file);
+        if(tmp->file != NULL) {
+            char buf[16];
+            int len = pread(fileno(tmp->file), buf, sizeof(buf), /*offset=*/ 0);
+            buf[len] = '\0';
+            sscanf(buf, "%d", &tmp->temperature);
         }
 
         tmp = tmp->next;
@@ -380,14 +380,12 @@ t_sensors *refresh_sensors(t_sensors *sensors)
 void set_fan_speed(t_fans* fans, int speed)
 {
     t_fans *tmp = fans;
-    FILE *file;
 
     while(tmp != NULL) {
-        file = fopen(tmp->fan_output_path, "rw+");
-
-        if(file != NULL) {
-            fprintf(file, "%d", speed);
-            fclose(file);
+        if(tmp->file != NULL) {
+            char buf[16];
+            int len = snprintf(buf, sizeof(buf), "%d", speed);
+            pwrite(fileno(tmp->file), buf, len, /*offset=*/ 0);
         }
 
         tmp = tmp->next;
