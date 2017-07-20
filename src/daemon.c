@@ -116,10 +116,6 @@ void signal_handler(int signal)
         syslog(LOG_WARNING, "Received SIGINT signal.");
         cleanup_and_exit(EXIT_SUCCESS);
 
-    case SIGSTOP:
-        syslog(LOG_WARNING, "Received SIGSTOP signal.");
-        cleanup_and_exit(EXIT_SUCCESS);
-
     default:
         syslog(LOG_WARNING, "Unhandled signal (%d) %s", signal, strsignal(signal));
         break;
@@ -133,7 +129,6 @@ void go_daemon(void (*fan_control)())
     signal(SIGHUP, signal_handler);
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
-    signal(SIGSTOP, signal_handler);
 
     syslog(LOG_INFO, "%s starting up", PROGRAM_NAME);
 
