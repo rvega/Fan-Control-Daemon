@@ -82,6 +82,9 @@ static void cleanup_and_exit(int exit_code)
 	struct s_fans *next_fan;
 	while (fans != NULL) {
 		next_fan = fans->next;
+		if (fans->file != NULL) {
+			fclose(fans->file);
+		}
 		free(fans->fan_output_path);
 		free(fans->fan_manual_path);
 		free(fans);
@@ -91,6 +94,9 @@ static void cleanup_and_exit(int exit_code)
 	struct s_sensors *next_sensor;
 	while (sensors != NULL) {
 		next_sensor = sensors->next;
+		if (sensors->file != NULL) {
+			fclose(sensors->file);
+		}
 		free(sensors->path);
 		free(sensors);
 		sensors = next_sensor;
