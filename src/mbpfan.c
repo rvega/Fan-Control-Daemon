@@ -222,7 +222,7 @@ t_sensors *retrieve_sensors()
         }
     }
 
-    if (!sensors_found > 0){
+    if (sensors_found == 0){
         syslog(LOG_CRIT, "mbpfan could not detect any temp sensor. Please contact the developer.\n");
         printf("mbpfan could not detect any temp sensor. Please contact the developer.\n");
         exit(EXIT_FAILURE);
