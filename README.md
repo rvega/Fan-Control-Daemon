@@ -33,7 +33,7 @@ Supported distributions:
 - Alpine
 - Trisquel
 
-Tested Macbook Models
+Tested MacBook Models
 ---------------------
 This section reports those models where mbpfan was tested successfully. It does not necessarily mean that the daemon does not work on non-listed models. 
 
@@ -51,7 +51,7 @@ This section reports those models where mbpfan was tested successfully. It does 
 - MacBook Air 7,2 13"  (Intel Core Duo - Linux 4.10)
 - MacBook 1,1 (Intel Core Duo - Linux 3.16)
 
-Tested iMac/Mini Models
+Tested iMac/Mac Mini Models
 ------------------
 This section reports the iMac/Mac-mini models where mbpfan was tested successfully.
 
@@ -65,7 +65,7 @@ This section reports the iMac/Mac-mini models where mbpfan was tested successful
 Warning
 -------
 Be sure to load the kernel modules **applesmc** and **coretemp**.
-These modules are often automatically loaded when booting up GNU/Linux on a Macbook. If that is not the case, you should make sure to load them at system startup. This is _usually_ achieved by inserting the following two lines in the file `/etc/modules`
+These modules are often automatically loaded when booting up GNU/Linux on a MacBook. If that is not the case, you should make sure to load them at system startup. This is _usually_ achieved by inserting the following two lines in the file `/etc/modules`
 ```
 coretemp
 applesmc
