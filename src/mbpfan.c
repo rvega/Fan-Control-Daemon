@@ -126,10 +126,10 @@ t_sensors *retrieve_sensors()
     } else {
 
         if(verbose) {
-            printf("Using new sensor path for kernel >= 3.0.15 or some CentOS versions with kernel 3.10.0\n");
+            printf("Using new sensor path for kernel >= 3.15.0 or some CentOS versions with kernel 3.10.0\n");
 
             if(daemonize) {
-                syslog(LOG_INFO, "Using new sensor path for kernel >= 3.0.15 or some CentOS versions with kernel 3.10.0 ");
+                syslog(LOG_INFO, "Using new sensor path for kernel >= 3.15.0 or some CentOS versions with kernel 3.10.0 ");
             }
         }
 
