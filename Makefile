@@ -15,7 +15,7 @@ BINFLAG = -o
 INCLUDES =
 LIBS = -lm
 LIBPATH =
-CFLAGS +=  $(COPT) -g $(INCLUDES) #-Wall
+CFLAGS +=  $(COPT) -g $(INCLUDES) -Wall -Wextra -Wno-unused-function
 LDFLAGS += $(LIBPATH) -g $(LIBS) #-Wall
 
 OBJS := $(patsubst %.$(C),%.$(OBJ),$(wildcard $(SOURCE_PATH)*.$(C)))
