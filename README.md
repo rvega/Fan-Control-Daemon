@@ -1,11 +1,9 @@
 mbpfan
 ====================
 
-Introduction
----------------------
 This is an enhanced version of [Allan McRae mbpfan](http://allanmcrae.com/2010/05/simple-macbook-pro-fan-daemon/)
 
-mbpfan is a daemon that uses input from coretemp module and sets the fan speed using the applesmc module. 
+mbpfan is a daemon that uses input from coretemp module and sets the fan speed using the applesmc module.
 This enhanced version assumes any number of processors and fans (max. 10).
 
 *  It only uses the temperatures from the processors as input.
@@ -15,9 +13,24 @@ This enhanced version assumes any number of processors and fans (max. 10).
 *  Verbose mode for both syslog and stdout
 *  Users can configure it using the file /etc/mbpfan.conf
 
+**Table Of Contents**
 
-Supported GNU/Linux Distributions
----------------------------------
+- [Supported GNU/Linux Distributions](#supported-gnulinux-distributions)
+- [Tested Macbook Models](#tested-macbook-models)
+- [Tested iMac/Mac Mini Models](#tested-imacmac-mini-models)
+- [Requirements](#requirements)
+- [Installation](#installation)
+	- [Arch Linux](#arch-linux)
+	- [Ubuntu](#ubuntu)
+	- [Gentoo](#gentoo)
+	- [Generic Install Instructions (All Other Operating Systems)](#generic-install-instructions-all-other-operating-systems)
+- [Run Instructions](#run-instructions)
+- [Starting at boot](#starting-at-boot)
+- [Usage](#usage)
+- [License](#license)
+
+## Supported GNU/Linux Distributions
+
 We provide scripts to to load mbpfan daemon at system boot for many distros.
 Please note that the support is provided by volunteers. mbpfan needs tests and bug reports.
 
@@ -32,12 +45,14 @@ Supported distributions:
 - Gentoo
 - Alpine
 - Trisquel
+- Solus
 
-Tested MacBook Models
----------------------
-This section reports those models where mbpfan was tested successfully. It does not necessarily mean that the daemon does not work on non-listed models. 
+## Tested Macbook Models
+
+This section reports those models where mbpfan was tested successfully. It does not necessarily mean that the daemon does not work on non-listed models.
 
 - MacBook Pro 12,1 13"  (Intel i5 - Linux 4.20)
+- MacBook Pro 11,4 15"  (Intel i7 - Linux 4.9.41)
 - MacBook Pro 11,1 13"  (Intel i5 - Linux 3.14, Linux 3.15)
 - MacBook Pro 9,2 13"  (Intel i5/i7 - Linux 3.10)
 - MacBook Pro 8,2 15"  (Intel i7 - Linux 3.6.2)
@@ -51,8 +66,8 @@ This section reports those models where mbpfan was tested successfully. It does 
 - MacBook Air 7,2 13"  (Intel Core Duo - Linux 4.10)
 - MacBook 1,1 (Intel Core Duo - Linux 3.16)
 
-Tested iMac/Mac Mini Models
-------------------
+## Tested iMac/Mac Mini Models
+
 This section reports the iMac/Mac-mini models where mbpfan was tested successfully.
 
 - iMac Retina 16.2 21.5" (Intel i5 - Linux 4.4.0 Ubuntu 16.04)  
@@ -62,10 +77,24 @@ This section reports the iMac/Mac-mini models where mbpfan was tested successful
 - Mac Mini 5,3 (Core i7 2.0 - Linux 4.4.0 elementary/Ubuntu)
 - Mac Mini 6,1 (Core i7 2.3 - Linux 4.7.3-4-ck Archlinux)
 
-Warning
--------
+## Requirements
+
 Be sure to load the kernel modules **applesmc** and **coretemp**.
-These modules are often automatically loaded when booting up GNU/Linux on a MacBook. If that is not the case, you should make sure to load them at system startup. This is _usually_ achieved by inserting the following two lines in the file `/etc/modules`
+
+These modules are often automatically loaded when booting up GNU/Linux on a MacBook. If that is not the case, you should make sure to load them at system startup.
+
+**How do I know if applesmc and coretemp are loaded?**
+
+In most distributions, you can run the following command:
+
+`lsmod | grep coretemp && lsmod | grep applesmc`
+
+If you see `coretemp` and `applesmc` listed, you are all set.
+
+**If you do not see `coretemp` and `applesmc` listed, you must load them.**
+
+This is _usually_ achieved by inserting the following two lines in the file `/etc/modules`
+
 ```
 coretemp
 applesmc
@@ -73,29 +102,29 @@ applesmc
 
 Please check the relevant documentation of your GNU/Linux distribution.
 
-Arch Linux
----------
+## Installation
+
+### Arch Linux
+
 See [mbpfan-git at AUR](https://aur.archlinux.org/packages/mbpfan-git/).
 Otherwise, please refer to the Generic Instructions.
 
 
-Ubuntu
-------
+### Ubuntu
 
 Install the ```build-essential``` package.
 Then, refer to the Generic Install Instructions.
 
 Otherwise, a step-by-step [tutorial for beginners is available on my website](https://ineed.coffee/3838/a-beginners-mbpfan-tutorial-for-ubuntu/).
 
-Gentoo
-------
+### Gentoo
 
 Install the ```mbpfan``` package with:
 
     sudo emerge -av app-laptop/mbpfan
 
-Generic Install Instructions
--------------------------
+### Generic Install Instructions (All Other Operating Systems)
+
 Compile with
 
     make
@@ -104,14 +133,14 @@ Install with
 
     sudo make install
 
-It copies mbpfan to /usr/sbin, mbpfan.conf to /etc (and overwrites existing files), 
+It copies mbpfan to /usr/sbin, mbpfan.conf to /etc (and overwrites existing files),
 README.md to /usr/share/doc/mbpfan, and mbpfan.8.gz to /usr/share/man/man8
 
 Run the tests now, see two sections below.
 
 If you would like to compile with Clang instead of GCC, simply set your system's
 default compiler to be Clang. Tested with Clang 3.8 and 3.9. Tested with Clang
-4.0 along with llvm-lld (The LLVM Linker). 
+4.0 along with llvm-lld (The LLVM Linker).
 
 
 Run The Tests (Recommended)
@@ -125,8 +154,8 @@ or
     sudo make tests
 
 
-Run Instructions
-----------------
+## Run Instructions
+
 If not installed, run with
 
     sudo bin/mbpfan
@@ -140,8 +169,8 @@ If installed and using the init file, run with (Ubuntu example)
     sudo service mbpfan start
 
 
-Starting at boot
-----------------
+## Starting at boot
+
 **Ubuntu**
 
 For systemd based init systems (Ubuntu 16.04+), the file mbpfan.service
@@ -152,14 +181,14 @@ For using it, execute:
     sudo systemctl enable mbpfan.service
 
 
-For upstart based init systems (Ubuntu before 16.04), an example upstart job has been provided. 
+For upstart based init systems (Ubuntu before 16.04), an example upstart job has been provided.
 For using it, execute:
 
     sudo cp mbpfan.upstart /etc/init/mbpfan.conf
     sudo start mbpfan
 
 **Debian**
-An init file suitable for /lib/lsb/init-functions (Debian) 
+An init file suitable for /lib/lsb/init-functions (Debian)
 is located in the main folder of the source files, called mbpfan.init.debian
 Rename it to mbpfan, give it execution permissions (chmod +x mbpfan)
 and move it to /etc/init.d
@@ -197,8 +226,7 @@ To start the service automatically at boot, also execute the following:
     sudo systemctl enable mbpfan.service
 
 
-Usage
--------
+## Usage
 
     Usage: ./mbpfan OPTION(S)
 
@@ -208,13 +236,13 @@ Usage
     -v Be (a lot) verbose
 
 
-License
----------------------
+## License
+
 GNU General Public License version 3
 
 
-Based On
----------------------
+**This Project Is Based On:**
+
 * http://allanmcrae.com/2010/05/simple-macbook-pro-fan-daemon/
 * http://allanmcrae.com/2011/08/mbp-fan-daemon-update/
 * https://launchpad.net/macfanctld
