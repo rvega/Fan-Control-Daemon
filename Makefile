@@ -1,6 +1,7 @@
 COMPILER=cc
 
 C = c
+OBJ = o
 OUTPUT_PATH = bin/
 SOURCE_PATH = src/
 BIN = bin/mbpfan
