@@ -121,7 +121,7 @@ t_sensors *retrieve_sensors()
             }
         }
 
-        path_begin = (char *) "/sys/devices/platform/coretemp.0/temp";
+        path_begin = strdup("/sys/devices/platform/coretemp.0/temp");
 
     } else {
 
@@ -133,7 +133,7 @@ t_sensors *retrieve_sensors()
             }
         }
 
-        path_begin = (char *) "/sys/devices/platform/coretemp.0/hwmon/hwmon";
+        path_begin = strdup("/sys/devices/platform/coretemp.0/hwmon/hwmon");
 
         int counter;
         for (counter = 0; counter < 10; counter++) {
