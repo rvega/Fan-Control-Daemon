@@ -28,6 +28,7 @@ This enhanced version assumes any number of processors and fans (max. 10).
 - [Starting at boot](#starting-at-boot)
 - [Usage](#usage)
 - [License](#license)
+- [Credits](#credits)
 
 ## Supported GNU/Linux Distributions
 
@@ -248,3 +249,9 @@ GNU General Public License version 3
 * https://launchpad.net/macfanctld
 * http://paste2.org/p/862259
 * http://www.lobotomo.com/products/FanControl/
+
+## Credits
+
+**This Project uses following library:**
+
+* [ANSI C Application Settings Managment](http://pokristensson.com/settings.html) by Per Ola Kristensson.

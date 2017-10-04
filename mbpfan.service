@@ -5,7 +5,7 @@ After=sysinit.target
 
 [Service]
 Type=simple
-ExecStart=/usr/sbin/mbpfan -fv
+ExecStart=/usr/sbin/mbpfan -f
 ExecReload=/usr/bin/kill -HUP $MAINPID
 PIDFile=/var/run/mbpfan.pid
 Restart=always
