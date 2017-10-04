@@ -118,6 +118,10 @@ void signal_handler(int signal)
         syslog(LOG_WARNING, "Received SIGTERM signal.");
         cleanup_and_exit(EXIT_SUCCESS);
 
+    case SIGQUIT:
+        syslog(LOG_WARNING, "Received SIGQUIT signal.");
+        cleanup_and_exit(EXIT_SUCCESS);
+
     case SIGINT:
         syslog(LOG_WARNING, "Received SIGINT signal.");
         cleanup_and_exit(EXIT_SUCCESS);
@@ -134,6 +138,7 @@ void go_daemon(void (*fan_control)())
     // Setup signal handling before we start
     signal(SIGHUP, signal_handler);
     signal(SIGTERM, signal_handler);
+    signal(SIGQUIT, signal_handler);
     signal(SIGINT, signal_handler);
 
     syslog(LOG_INFO, "%s starting up", PROGRAM_NAME);
