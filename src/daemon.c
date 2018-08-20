@@ -118,14 +118,17 @@ void signal_handler(int signal)
     case SIGTERM:
         syslog(LOG_WARNING, "Received SIGTERM signal.");
         cleanup_and_exit(EXIT_SUCCESS);
+        break;
 
     case SIGQUIT:
         syslog(LOG_WARNING, "Received SIGQUIT signal.");
         cleanup_and_exit(EXIT_SUCCESS);
+        break;
 
     case SIGINT:
         syslog(LOG_WARNING, "Received SIGINT signal.");
         cleanup_and_exit(EXIT_SUCCESS);
+        break;
 
     default:
         syslog(LOG_WARNING, "Unhandled signal (%d) %s", signal, strsignal(signal));
