@@ -376,7 +376,10 @@ void set_fan_speed(t_fans* fans, int speed)
         if(tmp->file != NULL) {
             char buf[16];
             int len = snprintf(buf, sizeof(buf), "%d", speed);
-            pwrite(fileno(tmp->file), buf, len, /*offset=*/ 0);
+            int res = pwrite(fileno(tmp->file), buf, len, /*offset=*/ 0);
+            if (res == -1) {
+                perror("Could not set fan speed");
+            }
         }
 
         tmp = tmp->next;
