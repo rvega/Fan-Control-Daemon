@@ -86,7 +86,7 @@ static char *smprintf(const char *fmt, ...)
     return buf;
 }
 
-bool is_legacy_sensors_path()
+bool is_modern_sensors_path()
 {
     struct utsname kernel;
     uname(&kernel);
@@ -100,25 +100,21 @@ bool is_legacy_sensors_path()
         exit(EXIT_FAILURE);
     }
 
-    const char *path_begin = "/sys/devices/platform/coretemp.0/hwmon/hwmon";
     int counter;
 
     for (counter = 0; counter < 10; counter++) {
-        char hwmon_path[strlen(path_begin)+2];
-        sprintf(hwmon_path, "%s%d", path_begin, counter);
-
-        FILE *file = fopen(hwmon_path, "rb");
-        int isdir = file == NULL && errno == EISDIR;
-        if (file != NULL) {
-            fclose(file);
-        }
-
-        if (isdir) {
-            return 0;
+        int temp;
+        for (temp = 1; temp < 10; ++temp) {
+            char *path = smprintf("/sys/devices/platform/coretemp.0/hwmon/hwmon%d/temp%d_input", counter, temp);
+            int res = access(path, R_OK);
+            free(path);
+            if (res == 0) {
+                return 1;
+            }
         }
     }
 
-    return 1;
+    return 0;
 }
 
 
@@ -131,7 +127,7 @@ t_sensors *retrieve_sensors()
     char *path = NULL;
     char *path_begin = NULL;
 
-    if (is_legacy_sensors_path()) {
+    if (!is_modern_sensors_path()) {
         if(verbose) {
             printf("Using legacy sensor path for kernel < 3.15.0\n");
 
@@ -161,13 +157,8 @@ t_sensors *retrieve_sensors()
 
             sprintf(hwmon_path, "%s%d", path_begin, counter);
 
-            FILE *file = fopen(hwmon_path, "rb");
-            int isdir = file == NULL && errno == EISDIR;
-            if (file != NULL) {
-                fclose(file);
-            }
-
-            if (isdir) {
+            int res = access(hwmon_path, R_OK);
+            if (res == 0) {
 
                 free(path_begin);
                 path_begin = smprintf("%s/temp", hwmon_path);
