@@ -110,7 +110,7 @@ static int read_value(const char *path)
 }
 
 
-static void set_defaults(void)
+void set_defaults(void)
 {
     int i;
     char *path;

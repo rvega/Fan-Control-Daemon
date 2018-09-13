@@ -117,8 +117,6 @@ static const char *test_config_file()
         return 0;
     }
 
-    mu_assert("Could not read min_fan_speed from config file",settings_get_int(settings, "general", "min_fan_speed") != 0);
-    mu_assert("Could not read max_fan_speed from config file",settings_get_int(settings, "general", "max_fan_speed") != 0);
     mu_assert("Could not read low_temp from config file",settings_get_int(settings, "general", "low_temp") != 0);
     mu_assert("Could not read high_temp from config file",settings_get_int(settings, "general", "high_temp") != 0);
     mu_assert("Could not read max_temp from config file",settings_get_int(settings, "general", "max_temp") != 0);
@@ -131,10 +129,12 @@ static const char *test_config_file()
 
 static const char *test_settings()
 {
+    set_defaults();
     retrieve_settings("./mbpfan.conf.test1");
     mu_assert("max_fan_speed value is not 6200", max_fan_speed == 6200);
     mu_assert("polling_interval is not 1", polling_interval == 1);
-    retrieve_settings("./mbpfan.conf");
+    set_defaults();
+    retrieve_settings("./mbpfan.conf.test0");
     mu_assert("min_fan_speed value is not 2000", min_fan_speed == 2000);
     mu_assert("polling_interval is not 7", polling_interval == 7);
     return 0;
@@ -170,11 +170,11 @@ static const char *test_settings_reload()
     signal(SIGHUP, handler);
     retrieve_settings("./mbpfan.conf");
     printf("Testing the _supplied_ mbpfan.conf (not the one you are using)..\n");
-    mu_assert("min_fan_speed value is not 2000 before SIGHUP", min_fan_speed == 2000);
-    mu_assert("polling_interval is not 7 before SIHUP", polling_interval == 7);
+    // cannot tests min_fan_speed since it is not set and thus auto-detected
+    mu_assert("polling_interval is not 7 before SIGHUP", polling_interval == 7);
     raise(SIGHUP);
     mu_assert("min_fan_speed value is not 6200 after SIGHUP", min_fan_speed == 6200);
-    mu_assert("polling_interval is not 1 after SIHUP", polling_interval == 1);
+    mu_assert("polling_interval is not 1 after SIGHUP", polling_interval == 1);
     retrieve_settings("./mbpfan.conf");
     return 0;
 }
