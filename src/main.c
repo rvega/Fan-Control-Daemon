@@ -157,9 +157,7 @@ int main(int argc, char *argv[])
             break;
 
         case 't':
-            tests();
-            exit(EXIT_SUCCESS);
-            break;
+            return tests();
 
         case 'v':
             verbose = 1;

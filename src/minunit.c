@@ -202,7 +202,7 @@ int tests()
     const char *result = all_tests();
 
     if (result != 0) {
-        printf("%s \n", result);
+        printf("Error: %s \n", result);
 
     } else {
         printf("ALL TESTS PASSED\n");
