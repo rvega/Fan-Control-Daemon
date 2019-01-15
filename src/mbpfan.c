@@ -163,6 +163,9 @@ t_sensors *retrieve_sensors()
 	int processor;
 	for (processor = 0; processor < NUM_PROCESSORS; processor++) {
 
+	    if (path_begin != NULL) {
+	        free(path_begin);
+	    }
 	    path_begin = smprintf("/sys/devices/platform/coretemp.%d/hwmon/hwmon", processor);
 
 	    int counter;
