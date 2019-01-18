@@ -63,7 +63,7 @@ int max_temp = 86;   // do not set it > 90
 #define NUM_MIN_FAN_SPEED_DEFAULT 2000
 #define NUM_MAX_FAN_SPEED_DEFAULT 6200
 
-int polling_interval = 7;
+int polling_interval = 1;
 
 t_sensors* sensors = NULL;
 t_fans* fans = NULL;
