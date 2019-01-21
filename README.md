@@ -1,6 +1,8 @@
 mbpfan
 ====================
 
+[![Build Status](https://travis-ci.org/dgraziotin/mbpfan.svg?branch=master)](https://travis-ci.org/dgraziotin/mbpfan)
+
 This is an enhanced version of [Allan McRae mbpfan](http://allanmcrae.com/2010/05/simple-macbook-pro-fan-daemon/)
 
 mbpfan is a daemon that uses input from coretemp module and sets the fan speed using the applesmc module.
