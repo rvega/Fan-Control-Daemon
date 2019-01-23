@@ -60,8 +60,9 @@ int max_temp = 86;   // do not set it > 90
 #define NUM_HWMONS 12
 #define NUM_TEMP_INPUTS 16
 #define NUM_FANS 10
-#define NUM_MIN_FAN_SPEED_DEFAULT 2000
-#define NUM_MAX_FAN_SPEED_DEFAULT 6200
+// sane defaults when user provides unexpected values
+#define MIN_FAN_SPEED_DEFAULT 500
+#define MAX_FAN_SPEED_DEFAULT 6500
 
 int polling_interval = 1;
 
@@ -291,14 +292,14 @@ t_fans *retrieve_fans()
 	    fan->fan_id = counter;
 
 	    int fan_speed = read_value(path_fan_min);
-	    if(fan_speed == -1 || fan_speed < NUM_MIN_FAN_SPEED_DEFAULT)
-		fan->fan_min_speed = NUM_MIN_FAN_SPEED_DEFAULT;
+	    if(fan_speed == -1 || fan_speed < MIN_FAN_SPEED_DEFAULT)
+		fan->fan_min_speed = MIN_FAN_SPEED_DEFAULT;
 	    else
 		fan->fan_min_speed = fan_speed;
 
 	    fan_speed = read_value(path_fan_max);
-	    if(fan_speed == -1 || fan_speed > NUM_MAX_FAN_SPEED_DEFAULT)
-		fan->fan_max_speed = NUM_MAX_FAN_SPEED_DEFAULT;
+	    if(fan_speed == -1 || fan_speed > MAX_FAN_SPEED_DEFAULT)
+		fan->fan_max_speed = MAX_FAN_SPEED_DEFAULT;
 	    else
 		fan->fan_max_speed = fan_speed;
 	    
