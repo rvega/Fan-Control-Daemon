@@ -138,6 +138,16 @@ Install the ```mbpfan``` package with:
 
     sudo emerge -av app-laptop/mbpfan
 
+
+### Solus
+
+On Solus, install the package with:
+```
+sudo eopkg install mbpfan
+```
+then enable the service.
+
+
 ### Ubuntu
 
 On Ubuntu 18.04 or later install via:
