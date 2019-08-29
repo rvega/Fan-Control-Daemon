@@ -186,22 +186,22 @@ Install with
 It copies mbpfan to /usr/sbin, mbpfan.conf to /etc (and overwrites existing files),
 README.md to /usr/share/doc/mbpfan, and mbpfan.8.gz to /usr/share/man/man8
 
-Run the tests now, see two sections below.
-
 If you would like to compile with Clang instead of GCC, simply set your system's
 default compiler to be Clang. Tested with Clang 3.8 and 3.9. Tested with Clang
 4.0 along with llvm-lld (The LLVM Linker).
 
 
-Run The Tests (Recommended)
----------------------------
-It is recommended to run the tests after installing the program. Please run the following command _from within the source directory_.
+Run The Tests (Optional)
+------------------------
+Users may run the tests after installing the program.  Please run the following command _from within the source directory_.
 
     sudo ./bin/mbpfan -t
 
 or
 
     sudo make tests
+
+Note that this only works on MacBook and not desktop computers due to different environment expectations.
 
 
 ## Run Instructions
