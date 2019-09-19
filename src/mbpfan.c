@@ -609,6 +609,7 @@ void mbpfan()
        fan = fan->next;
     }
 
+recalibrate:
     if(verbose) {
         printf("Sleeping for 2 seconds to get first temp delta\n");
 
@@ -668,11 +669,26 @@ void mbpfan()
             }
         }
    
+        time_t before_sleep = time(NULL);
+
         // call nanosleep instead of sleep to avoid rt_sigprocmask and
         // rt_sigaction
         struct timespec ts;
         ts.tv_sec = polling_interval;
         ts.tv_nsec = 0;
         nanosleep(&ts, NULL);
+
+        time_t after_sleep = time(NULL);
+        if(after_sleep - before_sleep > 2 * polling_interval) {
+            printf("Clock skew detected - slept for %ld seconds but expected %d\n", after_sleep - before_sleep, polling_interval);
+            fflush(stdout);
+
+            if(daemonize) {
+                syslog(LOG_INFO, "Clock skew detected - slept for %ld seconds but expected %d", after_sleep - before_sleep, polling_interval);
+            }
+
+            set_fans_man(fans);
+            goto recalibrate;
+        }
     }
 }
