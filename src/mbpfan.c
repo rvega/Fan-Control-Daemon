@@ -167,9 +167,7 @@ t_sensors *retrieve_sensors()
 	    int counter;
 	    for (counter = 0; counter < NUM_HWMONS; counter++) {
 
-		char hwmon_path[strlen(path_begin)+2];
-
-		sprintf(hwmon_path, "%s%d", path_begin, counter);
+                char *hwmon_path = smprintf("%s%d", path_begin, counter);
 
 		int res = access(hwmon_path, R_OK);
 		if (res == 0) {
@@ -186,8 +184,11 @@ t_sensors *retrieve_sensors()
 
 		    }
 
+                    free(hwmon_path);
 		    break;
 		}
+
+                free(hwmon_path);
 	    }
 
 	    int core = 0;
