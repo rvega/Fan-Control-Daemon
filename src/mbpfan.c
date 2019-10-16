@@ -648,10 +648,10 @@ void mbpfan()
             }
 
             if(verbose) {
-                printf("Old Temp %d: New Temp: %d Fan: %s Speed: %d\n", old_temp, new_temp, fan->label, fan_speed);
+                printf("Old Temp: %d New Temp: %d Fan: %s Speed: %d\n", old_temp, new_temp, fan->label, fan_speed);
 	    
                 if(daemonize) {
-                   syslog(LOG_INFO, "Old Temp %d: New Temp: %d Fan: %s Speed: %d", old_temp, new_temp, fan->label, fan_speed);
+                   syslog(LOG_INFO, "Old Temp: %d New Temp: %d Fan: %s Speed: %d", old_temp, new_temp, fan->label, fan_speed);
                 }
 	    }
 
