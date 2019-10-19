@@ -94,7 +94,7 @@ void set_fan_speed(t_fans* fan, int speed);
  */
 void set_fan_minimum_speed(t_fans* fans);
 /**
- *  Return average CPU temp in degrees (ceiling)
+ *  Return maximum CPU temp in degrees
  */
 unsigned short get_temp(t_sensors* sensors);
 

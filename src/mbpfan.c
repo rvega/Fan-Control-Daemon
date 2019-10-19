@@ -452,26 +452,16 @@ void set_fan_minimum_speed(t_fans* fans)
 unsigned short get_temp(t_sensors* sensors)
 {
     sensors = refresh_sensors(sensors);
-    int sum_temp = 0;
-    unsigned short temp = 0;
+    unsigned int temp = 0;
 
     t_sensors* tmp = sensors;
 
-    int number_sensors = 0;
-
     while(tmp != NULL) {
-        sum_temp += tmp->temperature;
+        temp = max(temp, tmp->temperature);
         tmp = tmp->next;
-        number_sensors++;
     }
 
-    // just to be safe
-    if (number_sensors == 0) {
-        number_sensors++;
-    }
-
-    temp = (unsigned short)( ceil( (float)( sum_temp ) / (number_sensors * 1000) ) );
-    return temp;
+    return temp / 1000;
 }
 
 void retrieve_settings(const char* settings_path, t_fans* fans)
