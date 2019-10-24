@@ -19,8 +19,8 @@
  *
  *
  *  Notes:
- *    Assumes any number of processors, cores and fans (max. 6, 16, 12
- *    as defined in NUM_PROCESSORS, NUM_HWMONS, NUM_TEMP_INPUTS and NUM_FANS)
+ *    Assumes any number of processors, cores, sensors and fans
+ *    (as defined in NUM_PROCESSORS, NUM_HWMONS, NUM_TEMP_INPUTS and NUM_FANS)
  *    It uses only the temperatures from the processors as input.
  *    Requires coretemp and applesmc kernel modules to be loaded.
  *    Requires root use
@@ -58,7 +58,7 @@ int max_temp = 86;   // do not set it > 90
 // maximum number of processors etc supported
 #define NUM_PROCESSORS 6
 #define NUM_HWMONS 12
-#define NUM_TEMP_INPUTS 16
+#define NUM_TEMP_INPUTS 64
 #define NUM_FANS 10
 // sane defaults when user provides unexpected values
 #define MIN_FAN_SPEED_DEFAULT 500
