@@ -17,6 +17,8 @@
 #ifndef _MBPFAN_H_
 #define _MBPFAN_H_
 
+#include <stdbool.h>
+
 /** Temperature Thresholds
  *  low_temp - temperature below which fan speed will be at minimum
  *  high_temp - fan will increase speed when higher than this temperature

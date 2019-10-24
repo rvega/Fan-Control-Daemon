@@ -243,6 +243,4 @@ void go_daemon(void (*fan_control)())
     if(daemonize) {
         syslog(LOG_INFO, "%s daemon exiting", PROGRAM_NAME);
     }
-
-    return;
 }

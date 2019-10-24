@@ -592,10 +592,10 @@ void mbpfan()
     while(fan != NULL) {
 
        fan->step_up = (float)( fan->fan_max_speed - fan->fan_min_speed ) /
-                      (float)( ( max_temp - high_temp ) * ( max_temp - high_temp + 1 ) / 2 );
+                      (float)( ( max_temp - high_temp ) * ( max_temp - high_temp + 1 ) / 2.0 );
 
        fan->step_down = (float)( fan->fan_max_speed - fan->fan_min_speed ) /
-                        (float)( ( max_temp - low_temp ) * ( max_temp - low_temp + 1 ) / 2 );
+                        (float)( ( max_temp - low_temp ) * ( max_temp - low_temp + 1 ) / 2.0 );
        fan = fan->next;
     }
 
