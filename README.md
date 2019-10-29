@@ -18,8 +18,7 @@ This enhanced version assumes any number of processors and fans (max. 10).
 **Table Of Contents**
 
 - [Supported GNU/Linux Distributions](#supported-gnulinux-distributions)
-- [Tested MacBook Models](#tested-macbook-models)
-- [Tested iMac/Mac mini Models](#tested-imacmac-mini-models)
+- [Tested Mac Models](#tested-mac-models)
 - [Requirements](#requirements)
 - [Installation](#installation)
 	- [Arch Linux](#arch-linux)
@@ -54,45 +53,9 @@ Supported distributions:
 - Trisquel
 - Solus
 
-## Tested MacBook Models
+## Tested Mac Models
 
-This section reports those models where mbpfan was tested successfully. It does not necessarily mean that the daemon does not work on non-listed models.
-
-- MacBook Pro 12,1 13"  (Intel i5 - Linux 4.20)
-- MacBook Pro 11,4 15"  (Intel i7 - Linux 4.9.41)
-- MacBook Pro 11,1 13"  (Intel i5 - Linux 3.14, Linux 3.15)
-- MacBook Pro 9,2 13"  (Intel i5/i7 - Linux 3.10)
-- MacBook Pro 8,2 15"  (Intel i7 - Linux 3.6.2)
-- MacBook Pro 8,1 13"  (Intel i5 - 2435M Linux 5.0.9 Fedora 30)
-- MacBook Pro 8,1 13"  (Intel i7 - Linux 3.2.0)
-- MacBook Pro 7,1 15"  (Intel Core 2 Duo - Linux 3.13)
-- MacBook Pro 6,2 15"  (Intel i7 - Linux 3.5.0)
-- MacBook Pro 6,2 15"  (Intel i7 - Linux 3.2.0)
-- MacBook Pro 3,1 17"  (Intel Core 2 Duo - Linux 5.0.7)
-- MacBook Pro 2,2 15"  (Intel Core 2 Duo - Linux 3.4.4)
-- MacBook Air 6,1 13"  (Intel i7 - Linux 3.13)
-- MacBook Air 5,2 13"  (Intel i5 - Linux 3.16)
-- MacBook Air 1,1 13"  (Intel Core Duo - Linux 4.4, Linux 4.8)
-- MacBook Air 7,2 13"  (Intel Core Duo - Linux 4.10)
-- MacBook 1,1 (Intel Core Duo - Linux 3.16)
-
-## Tested iMac/Mac mini Models
-
-This section reports the iMac/Mac mini models where mbpfan was tested successfully.
-
-- iMac Retina 16.2 21.5" (Intel i5 - Linux 4.4.0 Ubuntu 16.04)
-- iMac 12,1 21.5" (Intel i7 - Linux 4.6.4)
-- iMac 5,1 17" (Intel T7400 (Core 2 Duo) - Linux 14.04 Ubuntu)
-- Mac mini 2,1 (Core 2 Duo - Linux 4.4.0)
-- Mac mini 5,3 (Core i7 2.0 - Linux 4.4.0 elementary/Ubuntu)
-- Mac mini 6,1 (Core i7 2.3 - Linux 4.7.3-4-ck Archlinux)
-
-## Tested Mac Pro Models
-
-This section reports the Mac Pro models where mbpfan was tested successfully.
-
-- Mac Pro 3,1
-- Mac Pro 4,1 (with 5,1 firmware and hex-core Xeon X5690 mod - Linux 4.14)
+See https://github.com/linux-on-mac/mbpfan/wiki/Tested-Mac-Models .
 
 ## Requirements
 
