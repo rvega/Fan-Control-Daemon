@@ -417,7 +417,7 @@ t_sensors *refresh_sensors(t_sensors *sensors)
             char buf[16];
             int len = pread(fileno(tmp->file), buf, sizeof(buf), /*offset=*/ 0);
             buf[len] = '\0';
-            sscanf(buf, "%d", &tmp->temperature);
+            tmp->temperature = strtod(buf, NULL);
         }
 
         tmp = tmp->next;
