@@ -146,6 +146,7 @@ static const char *test_settings()
     t_fans* fan2 = (t_fans *)malloc(sizeof(t_fans));
     fan2->fan_id = 2;
     fan2->fan_max_speed = -1;
+    fan2->next = NULL;
     fan->next = fan2;
 
     retrieve_settings("./mbpfan.conf.test2", fan);
@@ -194,6 +195,7 @@ static const char *test_settings_reload()
 {
     t_fans* fan = (t_fans *) malloc( sizeof( t_fans ) );
     fan->fan_id = 1;
+    fan->fan_min_speed = -1;
     fan->next = NULL;
 
     signal(SIGHUP, handler);
