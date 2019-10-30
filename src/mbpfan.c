@@ -42,6 +42,7 @@
 #include "mbpfan.h"
 #include "global.h"
 #include "settings.h"
+#include "util.h"
 
 /* lazy min/max... */
 #define min(a,b) ((a) < (b) ? (a) : (b))
@@ -100,8 +101,7 @@ bool is_modern_sensors_path()
     str_kernel_version = strtok(kernel.release, ".");
 
     if (atoi(str_kernel_version) < 3){
-        syslog(LOG_INFO, "mbpfan detected a pre-3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
-        printf("mbpfan detected a pre-3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
+        mbp_log(LOG_ERR, "mbpfan detected a pre-3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
         exit(EXIT_FAILURE);
     }
 
@@ -136,11 +136,7 @@ t_sensors *retrieve_sensors()
 
     if (!is_modern_sensors_path()) {
         if(verbose) {
-            printf("Using legacy sensor path for kernel < 3.15.0\n");
-
-            if(daemonize) {
-                syslog(LOG_INFO, "Using legacy path for kernel < 3.15.0");
-            }
+            mbp_log(LOG_INFO, "Using legacy path for kernel < 3.15.0");
         }
 
         path_begin = strdup("/sys/devices/platform/coretemp.0/temp");
@@ -148,11 +144,7 @@ t_sensors *retrieve_sensors()
     } else {
 
         if(verbose) {
-            printf("Using new sensor path for kernel >= 3.15.0 or some CentOS versions with kernel 3.10.0\n");
-
-            if(daemonize) {
-                syslog(LOG_INFO, "Using new sensor path for kernel >= 3.15.0 or some CentOS versions with kernel 3.10.0 ");
-            }
+            mbp_log(LOG_INFO, "Using new sensor path for kernel >= 3.15.0 or some CentOS versions with kernel 3.10.0 ");
         }
 
 	// loop over up to 6 processors
@@ -176,12 +168,7 @@ t_sensors *retrieve_sensors()
 		    path_begin = smprintf("%s/temp", hwmon_path);
 
 		    if(verbose) {
-			printf("Found hwmon path at %s\n", path_begin);
-
-			if(daemonize) {
-			    syslog(LOG_INFO, "Found hwmon path at %s\n", path_begin);
-			}
-
+                        mbp_log(LOG_INFO, "Found hwmon path at %s", path_begin);
 		    }
 
                     free(hwmon_path);
@@ -228,16 +215,11 @@ t_sensors *retrieve_sensors()
     }
 
     if(verbose) {
-        printf("Found %d sensors\n", sensors_found);
-
-        if(daemonize) {
-            syslog(LOG_INFO, "Found %d sensors", sensors_found);
-        }
+        mbp_log(LOG_INFO, "Found %d sensors", sensors_found);
     }
 
     if (sensors_found == 0){
-        syslog(LOG_CRIT, "mbpfan could not detect any temp sensor. Please contact the developer.\n");
-        printf("mbpfan could not detect any temp sensor. Please contact the developer.\n");
+        mbp_log(LOG_CRIT, "mbpfan could not detect any temp sensor. Please contact the developer.");
         exit(EXIT_FAILURE);
     }
 
@@ -363,16 +345,11 @@ t_fans *retrieve_fans()
     }
 
     if(verbose) {
-        printf("Found %d fans\n", fans_found);
-
-        if(daemonize) {
-            syslog(LOG_INFO, "Found %d fans", fans_found);
-        }
+        mbp_log(LOG_INFO, "Found %d fans", fans_found);
     }
 
     if (fans_found == 0){
-        syslog(LOG_CRIT, "mbpfan could not detect any fan. Please contact the developer.\n");
-        printf("mbpfan could not detect any fan. Please contact the developer.\n");
+        mbp_log(LOG_CRIT, "mbpfan could not detect any fan. Please contact the developer.");
         exit(EXIT_FAILURE);
     }
 
@@ -481,11 +458,7 @@ void retrieve_settings(const char* settings_path, t_fans* fans)
     if (f == NULL) {
         /* Could not open configfile */
         if(verbose) {
-            printf("Couldn't open configfile, using defaults\n");
-
-            if(daemonize) {
-                syslog(LOG_INFO, "Couldn't open configfile, using defaults");
-            }
+            mbp_log(LOG_INFO, "Couldn't open configfile, using defaults");
         }
 
     } else {
@@ -495,11 +468,7 @@ void retrieve_settings(const char* settings_path, t_fans* fans)
         if (settings == NULL) {
             /* Could not read configfile */
             if(verbose) {
-                printf("Couldn't read configfile\n");
-
-                if(daemonize) {
-                    syslog(LOG_WARNING, "Couldn't read configfile");
-                }
+                mbp_log(LOG_WARNING, "Couldn't read configfile");
             }
 
         } else {
@@ -570,16 +539,14 @@ void mbpfan()
     while(fan != NULL) {
 	
         if (fan->fan_min_speed > fan->fan_max_speed) {
-            syslog(LOG_INFO, "Invalid fan speeds: %d %d", fan->fan_min_speed,  fan->fan_max_speed);
-            printf("Invalid fan speeds: %d %d\n", fan->fan_min_speed, fan->fan_max_speed);
+            mbp_log(LOG_ERR, "Invalid fan speeds: %d %d", fan->fan_min_speed,  fan->fan_max_speed);
             exit(EXIT_FAILURE);
         }
 	fan = fan->next;
     }
 
     if (low_temp > high_temp || high_temp > max_temp) {
-        syslog(LOG_INFO, "Invalid temperatures: %d %d %d", low_temp, high_temp, max_temp);
-        printf("Invalid temperatures: %d %d %d\n", low_temp, high_temp, max_temp);
+        mbp_log(LOG_ERR, "Invalid temperatures: %d %d %d", low_temp, high_temp, max_temp);
         exit(EXIT_FAILURE);
     }
 
@@ -601,11 +568,7 @@ void mbpfan()
 
 recalibrate:
     if(verbose) {
-        printf("Sleeping for 2 seconds to get first temp delta\n");
-
-        if(daemonize) {
-            syslog(LOG_INFO, "Sleeping for 2 seconds to get first temp delta");
-        }
+        mbp_log(LOG_INFO, "Sleeping for 2 seconds to get first temp delta");
     }
     sleep(2);
 
@@ -639,11 +602,7 @@ recalibrate:
             }
 
             if(verbose) {
-                printf("Old Temp: %d New Temp: %d Fan: %s Speed: %d\n", old_temp, new_temp, fan->label, fan_speed);
-	    
-                if(daemonize) {
-                   syslog(LOG_INFO, "Old Temp: %d New Temp: %d Fan: %s Speed: %d", old_temp, new_temp, fan->label, fan_speed);
-                }
+                mbp_log(LOG_INFO, "Old Temp: %d New Temp: %d Fan: %s Speed: %d", old_temp, new_temp, fan->label, fan_speed);
 	    }
 
 	    set_fan_speed(fan, fan_speed);
@@ -651,12 +610,7 @@ recalibrate:
 	} 
 
         if(verbose) {
-            printf("Sleeping for %d seconds\n", polling_interval);
-            fflush(stdout);
-
-            if(daemonize) {
-                syslog(LOG_INFO, "Sleeping for %d seconds", polling_interval);
-            }
+            mbp_log(LOG_INFO, "Sleeping for %d seconds", polling_interval);
         }
    
         time_t before_sleep = time(NULL);
@@ -670,13 +624,7 @@ recalibrate:
 
         time_t after_sleep = time(NULL);
         if(after_sleep - before_sleep > 2 * polling_interval) {
-            printf("Clock skew detected - slept for %ld seconds but expected %d\n", after_sleep - before_sleep, polling_interval);
-            fflush(stdout);
-
-            if(daemonize) {
-                syslog(LOG_INFO, "Clock skew detected - slept for %ld seconds but expected %d", after_sleep - before_sleep, polling_interval);
-            }
-
+            mbp_log(LOG_INFO, "Clock skew detected - slept for %ld seconds but expected %d", after_sleep - before_sleep, polling_interval);
             set_fans_man(fans);
             goto recalibrate;
         }

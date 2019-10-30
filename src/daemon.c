@@ -33,6 +33,7 @@
 #include "mbpfan.h"
 #include "global.h"
 #include "daemon.h"
+#include "util.h"
 
 int write_pid(int pid)
 {
@@ -207,33 +208,21 @@ void go_daemon(void (*fan_control)())
 
     if (read_pid() == -1) {
         if (verbose) {
-            printf("Writing a new .pid file with value %d at: %s\n", current_pid, PROGRAM_PID);
-            syslog(LOG_INFO, "Writing a new .pid file with value %d at: %s", current_pid, PROGRAM_PID);
+            mbp_log(LOG_INFO, "Writing a new .pid file with value %d at: %s", current_pid, PROGRAM_PID);
         }
 
         if (write_pid(current_pid) == 0) {
-            syslog(LOG_ERR, "Can not create a .pid file at: %s. Aborting", PROGRAM_PID);
-
-            if (verbose) {
-                printf("ERROR: Can not create a .pid file at: %s. Aborting\n", PROGRAM_PID);
-            }
-
+            mbp_log(LOG_ERR, "Can not create a .pid file at: %s. Aborting", PROGRAM_PID);
             exit(EXIT_FAILURE);
 
         } else {
             if (verbose) {
-                printf("Successfully written a new .pid file with value %d at: %s\n", current_pid, PROGRAM_PID);
-                syslog(LOG_INFO, "Successfully written a new .pid file with value %d at: %s", current_pid, PROGRAM_PID);
+                mbp_log(LOG_INFO, "Successfully written a new .pid file with value %d at: %s", current_pid, PROGRAM_PID);
             }
         }
 
     } else {
-        syslog(LOG_ERR, "A previously created .pid file exists at: %s. Aborting", PROGRAM_PID);
-
-        if (verbose) {
-            printf("ERROR: a previously created .pid file exists at: %s.\n Aborting\n", PROGRAM_PID);
-        }
-
+        mbp_log(LOG_ERR, "A previously created .pid file exists at: %s. Aborting", PROGRAM_PID);
         exit(EXIT_FAILURE);
     }
 

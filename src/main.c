@@ -31,6 +31,7 @@
 #include "global.h"
 #include "main.h"
 #include "minunit.h"
+#include "util.h"
 
 int daemonize = 1;
 int verbose = 0;
@@ -64,8 +65,7 @@ void check_requirements()
     uid_t uid=getuid(), euid=geteuid();
 
     if (uid != 0 || euid != 0) {
-        syslog(LOG_ERR, "%s needs root privileges. Please run %s as root. Exiting.", PROGRAM_NAME, PROGRAM_NAME);
-        printf("%s not started with root privileges. Please run %s as root. Exiting.\n", PROGRAM_NAME, PROGRAM_NAME);
+        mbp_log(LOG_ERR, "%s needs root privileges. Please run %s as root. Exiting.", PROGRAM_NAME, PROGRAM_NAME);
         exit(EXIT_FAILURE);
     }
 
@@ -75,8 +75,7 @@ void check_requirements()
     DIR* dir = opendir(CORETEMP_PATH);
 
     if (ENOENT == errno) {
-        syslog(LOG_ERR, "%s needs coretemp support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
-        printf("%s needs coretemp module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
+        mbp_log(LOG_ERR, "%s needs coretemp support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
         exit(EXIT_FAILURE);
     }
 
@@ -86,8 +85,7 @@ void check_requirements()
     dir = opendir(APPLESMC_PATH);
 
     if (ENOENT == errno) {
-        syslog(LOG_ERR, "%s needs applesmc support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
-        printf("%s needs applesmc module.\nPlease either load it or build it into the kernel. Exiting.\n", PROGRAM_NAME);
+        mbp_log(LOG_ERR, "%s needs applesmc support. Please either load it or build it into the kernel. Exiting.", PROGRAM_NAME);
         exit(EXIT_FAILURE);
     }
 
