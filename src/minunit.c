@@ -14,6 +14,27 @@
 
 int tests_run = 0;
 
+static void free_fans(t_fans* fans)
+{
+    while (fans != NULL) {
+        t_fans* tmp = fans->next;
+        free(fans->fan_manual_path);
+        free(fans->fan_output_path);
+        free(fans->label);
+        free(fans);
+        fans = tmp;
+    }
+}
+
+static void free_sensors(t_sensors* sensors)
+{
+    while (sensors != NULL) {
+        t_sensors* tmp = sensors->next;
+        free(sensors->path);
+        free(sensors);
+        sensors = tmp;
+    }
+}
 
 static const char *test_sensor_paths()
 {
@@ -31,6 +52,7 @@ static const char *test_sensor_paths()
         tmp = tmp->next;
     }
 
+    free_sensors(sensors);
     return 0;
 }
 
@@ -51,6 +73,7 @@ static const char *test_fan_paths()
     }
 
     mu_assert("No fans found", found_fan_path != 0);
+    free_fans(fans);
     return 0;
 }
 
@@ -95,6 +118,7 @@ static const char *test_get_temp()
     stress(2000);
     unsigned short temp_2 = get_temp(sensors);
     mu_assert("Invalid Higher temp test (if fan was already spinning high, this is not worrying)", temp_1 < temp_2);
+    free_sensors(sensors);
     return 0;
 }
 
@@ -196,6 +220,9 @@ static const char *test_settings_reload()
     t_fans* fan = (t_fans *) malloc( sizeof( t_fans ) );
     fan->fan_id = 1;
     fan->fan_min_speed = -1;
+    fan->fan_manual_path = NULL;
+    fan->fan_output_path = NULL;
+    fan->label = NULL;
     fan->next = NULL;
 
     signal(SIGHUP, handler);
@@ -207,7 +234,7 @@ static const char *test_settings_reload()
     mu_assert("min_fan_speed value is not 6200 after SIGHUP", fan->fan_min_speed == 6200);
     mu_assert("polling_interval is not 2 after SIGHUP", polling_interval == 2);
     retrieve_settings("./mbpfan.conf", fan);
-    free(fan);
+    free_fans(fan);
     return 0;
 }
 
