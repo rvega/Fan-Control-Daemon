@@ -231,7 +231,7 @@ static const char *test_settings_reload()
     // cannot tests min_fan_speed since it is not set and thus auto-detected
     mu_assert("polling_interval is not 1 before SIGHUP", polling_interval == 1);
     raise(SIGHUP);
-    mu_assert("min_fan_speed value is not 6200 after SIGHUP", fan->fan_min_speed == 6200);
+    // cannot tests min_fan_speed since it is not set and thus auto-detected
     mu_assert("polling_interval is not 2 after SIGHUP", polling_interval == 2);
     retrieve_settings("./mbpfan.conf", fan);
     free_fans(fan);
