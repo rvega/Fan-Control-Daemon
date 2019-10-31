@@ -5,6 +5,7 @@ extern int daemonize;
 extern int verbose;
 
 extern const char* PROGRAM_NAME;
+extern const char* PROGRAM_VERSION;
 extern const char* PROGRAM_PID;
 
 struct s_sensors {

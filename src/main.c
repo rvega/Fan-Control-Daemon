@@ -37,6 +37,7 @@ int daemonize = 1;
 int verbose = 0;
 
 const char *PROGRAM_NAME = "mbpfan";
+const char *PROGRAM_VERSION = "2.2.0";
 const char *PROGRAM_PID = "/var/run/mbpfan.pid";
 
 const char *CORETEMP_PATH = "/sys/devices/platform/coretemp.0";

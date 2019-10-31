@@ -147,8 +147,6 @@ void go_daemon(void (*fan_control)())
     signal(SIGQUIT, signal_handler);
     signal(SIGINT, signal_handler);
 
-    syslog(LOG_INFO, "%s starting up", PROGRAM_NAME);
-
     // Setup syslog logging - see SETLOGMASK(3)
     if(verbose) {
         setlogmask(LOG_UPTO(LOG_DEBUG));
@@ -158,6 +156,8 @@ void go_daemon(void (*fan_control)())
         setlogmask(LOG_UPTO(LOG_INFO));
         openlog(PROGRAM_NAME, LOG_CONS, LOG_USER);
     }
+
+    mbp_log(LOG_INFO, "%s %s starting up", PROGRAM_NAME, PROGRAM_VERSION);
 
     // configure timer slack
     int err = prctl(PR_SET_TIMERSLACK, 1000 * 1000 * 1000, 0, 0, 0);
