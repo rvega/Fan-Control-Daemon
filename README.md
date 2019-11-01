@@ -248,8 +248,7 @@ GNU General Public License version 3
 * http://allanmcrae.com/2010/05/simple-macbook-pro-fan-daemon/
 * http://allanmcrae.com/2011/08/mbp-fan-daemon-update/
 * https://launchpad.net/macfanctld
-* http://paste2.org/p/862259
-* http://www.lobotomo.com/products/FanControl/
+* https://www.lobotomo.com/products/FanControl/
 
 ## Credits
 
