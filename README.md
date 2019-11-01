@@ -242,6 +242,7 @@ execute the following (as root):
 
 GNU General Public License version 3
 
+## Credits
 
 **This Project Is Based On:**
 
@@ -249,8 +250,6 @@ GNU General Public License version 3
 * http://allanmcrae.com/2011/08/mbp-fan-daemon-update/
 * https://launchpad.net/macfanctld
 * https://www.lobotomo.com/products/FanControl/
-
-## Credits
 
 **This Project uses following library:**
 
