@@ -8,11 +8,11 @@
 void mbp_log(int level, const char *fmt, ...)
 {
     va_list args;
-    va_start(args, fmt);
     if (daemonize) {
+        va_start(args, fmt);
         vsyslog(level, fmt, args);
+        va_end(args);
     }
-    va_end(args);
 
     va_start(args, fmt);
     vprintf(fmt, args);
