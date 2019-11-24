@@ -12,6 +12,9 @@ void mbp_log(int level, const char *fmt, ...)
     if (daemonize) {
         vsyslog(level, fmt, args);
     }
+    va_end(args);
+
+    va_start(args, fmt);
     vprintf(fmt, args);
     puts("");  // trailing newline
     va_end(args);
