@@ -1,5 +1,4 @@
-mbpfan
-====================
+# mbpfan
 
 [![Build Status](https://travis-ci.org/dgraziotin/mbpfan.svg?branch=master)](https://travis-ci.org/dgraziotin/mbpfan)
 
@@ -32,6 +31,7 @@ This enhanced version assumes any number of processors and fans (max. 10).
 - [Run Instructions](#run-instructions)
 - [Starting at boot](#starting-at-boot)
 - [Usage](#usage)
+- [References](#references)
 - [License](#license)
 - [Credits](#credits)
 
@@ -236,6 +236,9 @@ execute the following (as root):
     -t Run the tests
     -v Be (a lot) verbose
 
+## References
+
+* [mbpfan on Ask Ubuntu](https://askubuntu.com/search?q=mbpfan+is%3Aquestion)
 
 ## License
 
