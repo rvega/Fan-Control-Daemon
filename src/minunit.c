@@ -159,7 +159,8 @@ static const char *test_settings()
     fan->next = NULL;
 
     retrieve_settings("./mbpfan.conf.test1", fan);
-    mu_assert("max_fan_speed value is not 6200", fan->fan_max_speed == 6200);
+    // choosing the maximum for iMac mid 2011
+    mu_assert("max_fan_speed value is not 2600", fan->fan_max_speed == 2600);
     mu_assert("polling_interval is not 2", polling_interval == 2);
 
     fan->fan_min_speed = -1;
