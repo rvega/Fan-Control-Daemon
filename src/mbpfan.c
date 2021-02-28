@@ -569,6 +569,28 @@ void check_requirements(const char* program_path)
 
 }
 
+int get_max_mhz(void)
+{
+    int max_mhz = -1;
+    DIR *dir = opendir("/sys/devices/system/cpu");
+    if (dir == NULL) {
+        return -1;
+    }
+    struct dirent *ent;
+    while ((ent = readdir(dir)) != NULL) {
+        if (strncmp(ent->d_name, "cpu", 3) != 0 ||
+            strcmp(ent->d_name, "cpufreq") == 0 ||
+            strcmp(ent->d_name, "cpuidle") == 0) {
+            continue;
+        }
+        char *path = smprintf("/sys/devices/system/cpu/%s/cpufreq/scaling_cur_freq", ent->d_name);
+        max_mhz = max(max_mhz, read_value(path) / 1000);
+        free(path);
+    }
+    closedir(dir);
+    return max_mhz;
+}
+
 void mbpfan()
 {
     int old_temp, new_temp, fan_speed, steps;
@@ -646,7 +668,7 @@ recalibrate:
             }
 
             if(verbose) {
-                mbp_log(LOG_INFO, "Old Temp: %d New Temp: %d Fan: %s Speed: %d", old_temp, new_temp, fan->label, fan_speed);
+                mbp_log(LOG_INFO, "Old Temp: %d New Temp: %d Fan: %s Speed: %d Max MHz: %d", old_temp, new_temp, fan->label, fan_speed, get_max_mhz());
 	    }
 
 	    set_fan_speed(fan, fan_speed);
