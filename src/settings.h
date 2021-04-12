@@ -39,8 +39,7 @@
 #include "strmap.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 typedef struct Settings Settings;
@@ -62,7 +61,7 @@ typedef struct Settings Settings;
  *
  * Return value: None.
  */
-typedef void(*settings_section_enum_func)(const char *key, const char *value, const void *obj);
+typedef void (*settings_section_enum_func)(const char *key, const char *value, const void *obj);
 
 /*
  * Creates a settings object.
@@ -70,7 +69,7 @@ typedef void(*settings_section_enum_func)(const char *key, const char *value, co
  * Return value: A pointer to a settings object,
  * or null if a new settings object could not be allocated.
  */
-Settings * settings_new();
+Settings *settings_new();
 
 /*
  * Releases all memory held by a settings object.
@@ -98,7 +97,7 @@ void settings_delete(Settings *settings);
  * Return value: A pointer to a settings object,
  * or null if an error occurred.
  */
-Settings * settings_open(FILE *stream);
+Settings *settings_open(FILE *stream);
 
 /*
  * Saves the current settings object in textual form to the given stream.
@@ -338,7 +337,7 @@ int settings_section_enum(const Settings *settings, const char *section, setting
 
 /*
 
-		   GNU LESSER GENERAL PUBLIC LICENSE
+                   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>

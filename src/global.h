@@ -9,18 +9,18 @@ extern int daemonize;
 extern int verbose;
 
 struct s_sensors {
-    FILE* file;
-    char* path;
+    FILE *file;
+    char *path;
     unsigned int temperature;
     struct s_sensors *next;
 };
 
 struct s_fans {
-    FILE* file;
-    char* path;  // TODO: unused
-    char* label;
-    char* fan_output_path;
-    char* fan_manual_path;
+    FILE *file;
+    char *path; // TODO: unused
+    char *label;
+    char *fan_output_path;
+    char *fan_manual_path;
     int step_up;
     int step_down;
     int fan_id;
@@ -33,7 +33,7 @@ struct s_fans {
 typedef struct s_sensors t_sensors;
 typedef struct s_fans t_fans;
 
-extern t_sensors* sensors;
-extern t_fans* fans;
+extern t_sensors *sensors;
+extern t_fans *fans;
 
 #endif

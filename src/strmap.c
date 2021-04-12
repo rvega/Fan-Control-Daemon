@@ -54,21 +54,21 @@ struct StrMap {
     Bucket *buckets;
 };
 
-static Pair * get_pair(Bucket *bucket, const char *key);
+static Pair *get_pair(Bucket *bucket, const char *key);
 static unsigned long hash(const char *str);
 
-StrMap * sm_new(unsigned int capacity)
+StrMap *sm_new(unsigned int capacity)
 {
     StrMap *map;
 
-    map = (StrMap*)malloc(sizeof(StrMap));
+    map = (StrMap *)malloc(sizeof(StrMap));
 
     if (map == NULL) {
         return NULL;
     }
 
     map->count = capacity;
-    map->buckets = (Bucket*)malloc(map->count * sizeof(Bucket));
+    map->buckets = (Bucket *)malloc(map->count * sizeof(Bucket));
 
     if (map->buckets == NULL) {
         free(map);
@@ -98,7 +98,7 @@ void sm_delete(StrMap *map)
         pair = bucket->pairs;
         j = 0;
 
-        while(j < m) {
+        while (j < m) {
             free(pair->key);
             free(pair->value);
             pair++;
@@ -210,7 +210,7 @@ int sm_put(StrMap *map, const char *key, const char *value)
             /* If the new value is larger than the old value, re-allocate
              * space for the new larger value.
              */
-            tmp_value = (char*)realloc(pair->value, (value_len + 1) * sizeof(char));
+            tmp_value = (char *)realloc(pair->value, (value_len + 1) * sizeof(char));
 
             if (tmp_value == NULL) {
                 return 0;
@@ -225,13 +225,13 @@ int sm_put(StrMap *map, const char *key, const char *value)
     }
 
     /* Allocate space for a new key and value */
-    new_key = (char*)malloc((key_len + 1) * sizeof(char));
+    new_key = (char *)malloc((key_len + 1) * sizeof(char));
 
     if (new_key == NULL) {
         return 0;
     }
 
-    new_value = (char*)malloc((value_len + 1) * sizeof(char));
+    new_value = (char *)malloc((value_len + 1) * sizeof(char));
 
     if (new_value == NULL) {
         free(new_key);
@@ -243,7 +243,7 @@ int sm_put(StrMap *map, const char *key, const char *value)
         /* The bucket is empty, lazily allocate space for a single
          * key-value pair.
          */
-        bucket->pairs = (Pair*)malloc(sizeof(Pair));
+        bucket->pairs = (Pair *)malloc(sizeof(Pair));
 
         if (bucket->pairs == NULL) {
             free(new_key);
@@ -257,7 +257,7 @@ int sm_put(StrMap *map, const char *key, const char *value)
         /* The bucket wasn't empty but no pair existed that matches the provided
          * key, so create a new key-value pair.
          */
-        tmp_pairs = (Pair*)realloc(bucket->pairs, (bucket->count + 1) * sizeof(Pair));
+        tmp_pairs = (Pair *)realloc(bucket->pairs, (bucket->count + 1) * sizeof(Pair));
 
         if (tmp_pairs == NULL) {
             free(new_key);
@@ -353,7 +353,7 @@ int sm_enum(const StrMap *map, sm_enum_func enum_func, const void *obj)
  * Returns a pair from the bucket that matches the provided key,
  * or null if no such pair exist.
  */
-static Pair * get_pair(Bucket *bucket, const char *key)
+static Pair *get_pair(Bucket *bucket, const char *key)
 {
     unsigned int i, n;
     Pair *pair;
@@ -398,7 +398,7 @@ static unsigned long hash(const char *str)
 
 /*
 
-		   GNU LESSER GENERAL PUBLIC LICENSE
+                   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>

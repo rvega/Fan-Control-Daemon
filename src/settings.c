@@ -36,17 +36,17 @@
  */
 #include "settings.h"
 
-#define MAX_SECTIONCHARS	256
-#define MAX_KEYCHARS	256
-#define MAX_VALUECHARS	256
-#define MAX_LINECHARS	(MAX_KEYCHARS + MAX_VALUECHARS + 10)
+#define MAX_SECTIONCHARS 256
+#define MAX_KEYCHARS 256
+#define MAX_VALUECHARS 256
+#define MAX_LINECHARS (MAX_KEYCHARS + MAX_VALUECHARS + 10)
 
-#define COMMENT_CHAR	'#'
-#define SECTION_START_CHAR	'['
-#define SECTION_END_CHAR	']'
-#define KEY_VALUE_SEPARATOR_CHAR	'='
+#define COMMENT_CHAR '#'
+#define SECTION_START_CHAR '['
+#define SECTION_END_CHAR ']'
+#define KEY_VALUE_SEPARATOR_CHAR '='
 
-#define DEFAULT_STRMAP_CAPACITY	256
+#define DEFAULT_STRMAP_CAPACITY 256
 
 typedef struct Section Section;
 typedef struct ParseState ParseState;
@@ -83,20 +83,20 @@ static int is_comment_str(const char *str);
 static int is_section_str(const char *str);
 static int is_key_value_str(const char *str);
 static int is_key_without_value_str(const char *str);
-static const char * get_token(char *str, char delim, char **last);
+static const char *get_token(char *str, char delim, char **last);
 static int get_section_from_str(const char *str, char *out_buf, unsigned int out_buf_n);
 static int get_key_value_from_str(const char *str, char *out_buf1, unsigned int out_buf1_n, char *out_buf2, unsigned int out_buf2_n);
 static int get_key_without_value_from_str(const char *str, char *out_buf, unsigned int out_buf_n);
 static int get_converted_value(const Settings *settings, const char *section, const char *key, ConvertMode mode, void *out);
 static int get_converted_tuple(const Settings *settings, const char *section, const char *key, char delim, ConvertMode mode, void *out, unsigned int n_out);
-static Section * get_section(Section *sections, unsigned int n, const char *name);
+static Section *get_section(Section *sections, unsigned int n, const char *name);
 static void enum_map(const char *key, const char *value, const void *obj);
 
-Settings * settings_new()
+Settings *settings_new()
 {
     Settings *settings;
 
-    settings = (Settings*)malloc(sizeof(Settings));
+    settings = (Settings *)malloc(sizeof(Settings));
 
     if (settings == NULL) {
         return NULL;
@@ -135,7 +135,7 @@ void settings_delete(Settings *settings)
     free(settings);
 }
 
-Settings * settings_open(FILE *stream)
+Settings *settings_open(FILE *stream)
 {
     Settings *settings;
     char buf[MAX_LINECHARS];
@@ -285,7 +285,7 @@ int settings_set(Settings *settings, const char *section, const char *key, const
 
     if (s == NULL) {
         /* The section is not created---create it */
-        s = (Section*)realloc(settings->sections, (settings->section_count + 1) * sizeof(Section));
+        s = (Section *)realloc(settings->sections, (settings->section_count + 1) * sizeof(Section));
 
         if (s == NULL) {
             return 0;
@@ -301,7 +301,7 @@ int settings_set(Settings *settings, const char *section, const char *key, const
             return 0;
         }
 
-        s->name = (char*)malloc((strlen(section) + 1) * sizeof(char));
+        s->name = (char *)malloc((strlen(section) + 1) * sizeof(char));
 
         if (s->name == NULL) {
             sm_delete(s->map);
@@ -723,7 +723,7 @@ static int get_key_without_value_from_str(const char *str, char *out_buf, unsign
  *     printf("token: %s", token);
  * }
  */
-static const char * get_token(char *str, char delim, char **last)
+static const char *get_token(char *str, char delim, char **last)
 {
 
     char *s0;
@@ -845,7 +845,7 @@ static int get_converted_tuple(const Settings *settings, const char *section, co
 /* Returns a pointer to the section or null if the named section does not
  * exist.
  */
-static Section * get_section(Section *sections, unsigned int n, const char *name)
+static Section *get_section(Section *sections, unsigned int n, const char *name)
 {
     unsigned int i;
     Section *section;
@@ -896,7 +896,7 @@ static void enum_map(const char *key, const char *value, const void *obj)
 
 /*
 
-		   GNU LESSER GENERAL PUBLIC LICENSE
+                   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>

@@ -47,8 +47,8 @@
 #include "util.h"
 
 /* lazy min/max... */
-#define min(a,b) ((a) < (b) ? (a) : (b))
-#define max(a,b) ((a) > (b) ? (a) : (b))
+#define min(a, b) ((a) < (b) ? (a) : (b))
+#define max(a, b) ((a) > (b) ? (a) : (b))
 
 #define CORETEMP_PATH "/sys/devices/platform/coretemp.0"
 #define APPLESMC_PATH "/sys/devices/platform/applesmc.768"
@@ -57,9 +57,9 @@
  * low_temp - temperature below which fan speed will be at minimum
  * high_temp - fan will increase speed when higher than this temperature
  * max_temp - fan will run at full speed above this temperature */
-int low_temp = 63;   // try ranges 55-63
-int high_temp = 66;  // try ranges 58-66
-int max_temp = 86;   // do not set it > 90
+int low_temp = 63;  // try ranges 55-63
+int high_temp = 66; // try ranges 58-66
+int max_temp = 86;  // do not set it > 90
 
 // maximum number of processors etc supported
 #define NUM_PROCESSORS 6
@@ -72,8 +72,8 @@ int max_temp = 86;   // do not set it > 90
 
 int polling_interval = 1;
 
-t_sensors* sensors = NULL;
-t_fans* fans = NULL;
+t_sensors *sensors = NULL;
+t_fans *fans = NULL;
 
 char *smprintf(const char *fmt, ...)
 {
@@ -105,7 +105,7 @@ bool is_modern_sensors_path()
     char *str_kernel_version;
     str_kernel_version = strtok(kernel.release, ".");
 
-    if (atoi(str_kernel_version) < 3){
+    if (atoi(str_kernel_version) < 3) {
         mbp_log(LOG_ERR, "mbpfan detected a pre-3.x.x linux kernel. Detected version: %s. Exiting.\n", kernel.release);
         exit(EXIT_FAILURE);
     }
@@ -127,7 +127,6 @@ bool is_modern_sensors_path()
     return 0;
 }
 
-
 t_sensors *retrieve_sensors()
 {
     t_sensors *sensors_head = NULL;
@@ -140,7 +139,7 @@ t_sensors *retrieve_sensors()
     int sensors_found = 0;
 
     if (!is_modern_sensors_path()) {
-        if(verbose) {
+        if (verbose) {
             mbp_log(LOG_INFO, "Using legacy path for kernel < 3.15.0");
         }
 
@@ -148,82 +147,82 @@ t_sensors *retrieve_sensors()
 
     } else {
 
-        if(verbose) {
+        if (verbose) {
             mbp_log(LOG_INFO, "Using new sensor path for kernel >= 3.15.0 or some CentOS versions with kernel 3.10.0 ");
         }
 
-	// loop over up to 6 processors
-	int processor;
-	for (processor = 0; processor < NUM_PROCESSORS; processor++) {
+        // loop over up to 6 processors
+        int processor;
+        for (processor = 0; processor < NUM_PROCESSORS; processor++) {
 
-	    if (path_begin != NULL) {
-	        free(path_begin);
-	    }
-	    path_begin = smprintf("/sys/devices/platform/coretemp.%d/hwmon/hwmon", processor);
+            if (path_begin != NULL) {
+                free(path_begin);
+            }
+            path_begin = smprintf("/sys/devices/platform/coretemp.%d/hwmon/hwmon", processor);
 
-	    int counter;
-	    for (counter = 0; counter < NUM_HWMONS; counter++) {
+            int counter;
+            for (counter = 0; counter < NUM_HWMONS; counter++) {
 
                 char *hwmon_path = smprintf("%s%d", path_begin, counter);
 
-		int res = access(hwmon_path, R_OK);
-		if (res == 0) {
+                int res = access(hwmon_path, R_OK);
+                if (res == 0) {
 
-		    free(path_begin);
-		    path_begin = smprintf("%s/temp", hwmon_path);
+                    free(path_begin);
+                    path_begin = smprintf("%s/temp", hwmon_path);
 
-		    if(verbose) {
+                    if (verbose) {
                         mbp_log(LOG_INFO, "Found hwmon path at %s", path_begin);
-		    }
+                    }
 
                     free(hwmon_path);
-		    break;
-		}
+                    break;
+                }
 
                 free(hwmon_path);
-	    }
+            }
 
-	    int core = 0;
-	    for(core = 0; core<NUM_TEMP_INPUTS; core++) {
-		path = smprintf("%s%d%s", path_begin, core, path_end);
+            int core = 0;
+            for (core = 0; core < NUM_TEMP_INPUTS; core++) {
+                path = smprintf("%s%d%s", path_begin, core, path_end);
 
-		FILE *file = fopen(path, "r");
+                FILE *file = fopen(path, "r");
 
-		if(file != NULL) {
-		    s = (t_sensors *) malloc( sizeof( t_sensors ) );
-		    s->path = strdup(path);
-		    fscanf(file, "%d", &s->temperature);
+                if (file != NULL) {
+                    s = (t_sensors *)malloc(sizeof(t_sensors));
+                    s->path = strdup(path);
+                    fscanf(file, "%d", &s->temperature);
 
-		    if (sensors_head == NULL) {
-			sensors_head = s;
-			sensors_head->next = NULL;
+                    if (sensors_head == NULL) {
+                        sensors_head = s;
+                        sensors_head->next = NULL;
 
-		    } else {
-			t_sensors *tmp = sensors_head;
+                    } else {
+                        t_sensors *tmp = sensors_head;
 
-			while (tmp->next != NULL) {
-			    tmp = tmp->next;
-			}
+                        while (tmp->next != NULL) {
+                            tmp = tmp->next;
+                        }
 
-			tmp->next = s;
-			tmp->next->next = NULL;
-		    }
+                        tmp->next = s;
+                        tmp->next->next = NULL;
+                    }
 
-		    s->file = file;
-		    sensors_found++;
-		}
+                    s->file = file;
+                    sensors_found++;
+                }
 
-		free(path);
-		path = NULL;
-	    }
-	}
+                free(path);
+                path = NULL;
+            }
+        }
     }
 
-    if(verbose) {
+    if (verbose) {
         mbp_log(LOG_INFO, "Found %d sensors", sensors_found);
     }
 
-    if (sensors_found == 0){
+    if (sensors_found == 0) {
         mbp_log(LOG_CRIT, "mbpfan could not detect any temp sensor. Please contact the developer.");
         exit(EXIT_FAILURE);
     }
@@ -280,37 +279,37 @@ t_fans *retrieve_fans()
     const char *path_man_end = "_manual";
     const char *path_max_speed = "_max";
     const char *path_min_speed = "_min";
-    
+
     int counter = 0;
     int fans_found = 0;
 
-    for(counter = 0; counter<NUM_FANS; counter++) {
+    for (counter = 0; counter < NUM_FANS; counter++) {
 
         path_output = smprintf("%s%d%s", path_begin, counter, path_output_end);
         path_label = smprintf("%s%d%s", path_begin, counter, path_label_end);
         path_manual = smprintf("%s%d%s", path_begin, counter, path_man_end);
-	path_fan_min = smprintf("%s%d%s",path_begin, counter, path_min_speed);
-	path_fan_max = smprintf("%s%d%s",path_begin, counter, path_max_speed);
+        path_fan_min = smprintf("%s%d%s", path_begin, counter, path_min_speed);
+        path_fan_max = smprintf("%s%d%s", path_begin, counter, path_max_speed);
 
         FILE *file = fopen(path_output, "w");
 
-        if(file != NULL) {
-            fan = (t_fans *) malloc( sizeof( t_fans ) );
+        if (file != NULL) {
+            fan = (t_fans *)malloc(sizeof(t_fans));
             fan->fan_output_path = strdup(path_output);
             fan->fan_manual_path = strdup(path_manual);
-	    fan->fan_id = counter;
+            fan->fan_id = counter;
 
-	    int fan_speed = read_value(path_fan_min);
-	    if(fan_speed == -1 || fan_speed < MIN_FAN_SPEED_DEFAULT)
-		fan->fan_min_speed = MIN_FAN_SPEED_DEFAULT;
-	    else
-		fan->fan_min_speed = fan_speed;
+            int fan_speed = read_value(path_fan_min);
+            if (fan_speed == -1 || fan_speed < MIN_FAN_SPEED_DEFAULT)
+                fan->fan_min_speed = MIN_FAN_SPEED_DEFAULT;
+            else
+                fan->fan_min_speed = fan_speed;
 
-	    fan_speed = read_value(path_fan_max);
-	    if(fan_speed == -1 || fan_speed > MAX_FAN_SPEED_DEFAULT)
-		fan->fan_max_speed = MAX_FAN_SPEED_DEFAULT;
-	    else
-		fan->fan_max_speed = fan_speed;
+            fan_speed = read_value(path_fan_max);
+            if (fan_speed == -1 || fan_speed > MAX_FAN_SPEED_DEFAULT)
+                fan->fan_max_speed = MAX_FAN_SPEED_DEFAULT;
+            else
+                fan->fan_max_speed = fan_speed;
 
             size_t max_label_len = 64;
             fan->label = malloc(max_label_len);
@@ -337,23 +336,23 @@ t_fans *retrieve_fans()
             fan->file = file;
             fans_found++;
         }
-	free(path_fan_min);
-	path_fan_min = NULL;
-	free(path_label);
-	path_label = NULL;
-	free(path_fan_max);
-	path_fan_max = NULL;
+        free(path_fan_min);
+        path_fan_min = NULL;
+        free(path_label);
+        path_label = NULL;
+        free(path_fan_max);
+        path_fan_max = NULL;
         free(path_output);
         path_output = NULL;
         free(path_manual);
         path_manual = NULL;
     }
 
-    if(verbose) {
+    if (verbose) {
         mbp_log(LOG_INFO, "Found %d fans", fans_found);
     }
 
-    if (fans_found == 0){
+    if (fans_found == 0) {
         mbp_log(LOG_CRIT, "mbpfan could not detect any fan. Please contact the developer.");
         exit(EXIT_FAILURE);
     }
@@ -366,10 +365,10 @@ static void set_fans_mode(t_fans *fans, int mode)
     t_fans *tmp = fans;
     FILE *file;
 
-    while(tmp != NULL) {
+    while (tmp != NULL) {
         file = fopen(tmp->fan_manual_path, "rw+");
 
-        if(file != NULL) {
+        if (file != NULL) {
             fprintf(file, "%d", mode);
             fclose(file);
         }
@@ -394,10 +393,10 @@ t_sensors *refresh_sensors(t_sensors *sensors)
 {
     t_sensors *tmp = sensors;
 
-    while(tmp != NULL) {
-        if(tmp->file != NULL) {
+    while (tmp != NULL) {
+        if (tmp->file != NULL) {
             char buf[16];
-            int len = pread(fileno(tmp->file), buf, sizeof(buf), /*offset=*/ 0);
+            int len = pread(fileno(tmp->file), buf, sizeof(buf), /*offset=*/0);
             buf[len] = '\0';
             tmp->temperature = strtod(buf, NULL);
         }
@@ -409,36 +408,36 @@ t_sensors *refresh_sensors(t_sensors *sensors)
 }
 
 /* Controls the speed of a fan */
-void set_fan_speed(t_fans* fan, int speed)
+void set_fan_speed(t_fans *fan, int speed)
 {
-    if(fan != NULL && fan->file != NULL && fan->old_speed != speed) {
-       char buf[16];
-       int len = snprintf(buf, sizeof(buf), "%d", speed);
-       int res = pwrite(fileno(fan->file), buf, len, /*offset=*/ 0);
-       if (res == -1) {
-          perror("Could not set fan speed");
-       }
-       fan->old_speed = speed;
+    if (fan != NULL && fan->file != NULL && fan->old_speed != speed) {
+        char buf[16];
+        int len = snprintf(buf, sizeof(buf), "%d", speed);
+        int res = pwrite(fileno(fan->file), buf, len, /*offset=*/0);
+        if (res == -1) {
+            perror("Could not set fan speed");
+        }
+        fan->old_speed = speed;
     }
 }
 
-void set_fan_minimum_speed(t_fans* fans)
+void set_fan_minimum_speed(t_fans *fans)
 {
-   t_fans *tmp = fans;
+    t_fans *tmp = fans;
 
-   while(tmp != NULL) {
-      set_fan_speed(tmp,tmp->fan_min_speed); 
-      tmp = tmp->next;
-   }
+    while (tmp != NULL) {
+        set_fan_speed(tmp, tmp->fan_min_speed);
+        tmp = tmp->next;
+    }
 }
-unsigned short get_temp(t_sensors* sensors)
+unsigned short get_temp(t_sensors *sensors)
 {
     sensors = refresh_sensors(sensors);
     unsigned int temp = 0;
 
-    t_sensors* tmp = sensors;
+    t_sensors *tmp = sensors;
 
-    while(tmp != NULL) {
+    while (tmp != NULL) {
         temp = max(temp, tmp->temperature);
         tmp = tmp->next;
     }
@@ -446,7 +445,7 @@ unsigned short get_temp(t_sensors* sensors)
     return temp / 1000;
 }
 
-void retrieve_settings(const char* settings_path, t_fans* fans)
+void retrieve_settings(const char *settings_path, t_fans *fans)
 {
     Settings *settings = NULL;
     int result = 0;
@@ -459,10 +458,9 @@ void retrieve_settings(const char* settings_path, t_fans* fans)
         f = fopen(settings_path, "r");
     }
 
-
     if (f == NULL) {
         /* Could not open configfile */
-        if(verbose) {
+        if (verbose) {
             mbp_log(LOG_INFO, "Couldn't open configfile, using defaults");
         }
 
@@ -472,34 +470,34 @@ void retrieve_settings(const char* settings_path, t_fans* fans)
 
         if (settings == NULL) {
             /* Could not read configfile */
-            if(verbose) {
+            if (verbose) {
                 mbp_log(LOG_WARNING, "Couldn't read configfile");
             }
 
         } else {
-	
-	    t_fans *fan = fans;
 
-	    while(fan != NULL) {
+            t_fans *fan = fans;
 
-		char* config_key;
-		config_key = smprintf("min_fan%d_speed", fan->fan_id);
+            while (fan != NULL) {
+
+                char *config_key;
+                config_key = smprintf("min_fan%d_speed", fan->fan_id);
                 /* Read configfile values */
                 result = settings_get_int(settings, "general", config_key);
                 if (result != 0) {
-                   fan->fan_min_speed = result;
+                    fan->fan_min_speed = result;
                 }
-		free(config_key);
-		
-		config_key = smprintf("max_fan%d_speed", fan->fan_id);
+                free(config_key);
+
+                config_key = smprintf("max_fan%d_speed", fan->fan_id);
                 result = settings_get_int(settings, "general", config_key);
 
                 if (result != 0) {
-                   fan->fan_max_speed = result;
+                    fan->fan_max_speed = result;
                 }
-		free(config_key);
-		fan = fan->next;
-	    }
+                free(config_key);
+                fan = fan->next;
+            }
             result = settings_get_int(settings, "general", "low_temp");
 
             if (result != 0) {
@@ -530,14 +528,14 @@ void retrieve_settings(const char* settings_path, t_fans* fans)
     }
 }
 
-void check_requirements(const char* program_path)
+void check_requirements(const char *program_path)
 {
 
     /**
      * Check for root
      */
 
-    uid_t uid=getuid(), euid=geteuid();
+    uid_t uid = getuid(), euid = geteuid();
 
     if (uid != 0 || euid != 0) {
         mbp_log(LOG_ERR, "%s needs root privileges. Please run %s as root. Exiting.", program_path, program_path);
@@ -545,9 +543,9 @@ void check_requirements(const char* program_path)
     }
 
     /**
-      * Check for coretemp and applesmc modules
-      */
-    DIR* dir = opendir(CORETEMP_PATH);
+     * Check for coretemp and applesmc modules
+     */
+    DIR *dir = opendir(CORETEMP_PATH);
 
     if (ENOENT == errno) {
         mbp_log(LOG_ERR, "%s needs coretemp support. Please either load it or build it into the kernel. Exiting.", program_path);
@@ -555,7 +553,6 @@ void check_requirements(const char* program_path)
     }
 
     closedir(dir);
-
 
     dir = opendir(APPLESMC_PATH);
 
@@ -565,8 +562,6 @@ void check_requirements(const char* program_path)
     }
 
     closedir(dir);
-
-
 }
 
 int get_max_mhz(void)
@@ -578,9 +573,7 @@ int get_max_mhz(void)
     }
     struct dirent *ent;
     while ((ent = readdir(dir)) != NULL) {
-        if (strncmp(ent->d_name, "cpu", 3) != 0 ||
-            strcmp(ent->d_name, "cpufreq") == 0 ||
-            strcmp(ent->d_name, "cpuidle") == 0) {
+        if (strncmp(ent->d_name, "cpu", 3) != 0 || strcmp(ent->d_name, "cpufreq") == 0 || strcmp(ent->d_name, "cpuidle") == 0) {
             continue;
         }
         char *path = smprintf("/sys/devices/system/cpu/%s/cpufreq/scaling_cur_freq", ent->d_name);
@@ -595,20 +588,20 @@ void mbpfan()
 {
     int old_temp, new_temp, fan_speed, steps;
     int temp_change;
-    
+
     sensors = retrieve_sensors();
     fans = retrieve_fans();
 
     retrieve_settings(NULL, fans);
-    
-    t_fans* fan = fans;
-    while(fan != NULL) {
-	
+
+    t_fans *fan = fans;
+    while (fan != NULL) {
+
         if (fan->fan_min_speed > fan->fan_max_speed) {
-            mbp_log(LOG_ERR, "Invalid fan speeds: %d %d", fan->fan_min_speed,  fan->fan_max_speed);
+            mbp_log(LOG_ERR, "Invalid fan speeds: %d %d", fan->fan_min_speed, fan->fan_max_speed);
             exit(EXIT_FAILURE);
         }
-	fan = fan->next;
+        fan = fan->next;
     }
 
     if (low_temp > high_temp || high_temp > max_temp) {
@@ -622,63 +615,61 @@ void mbpfan()
     set_fan_minimum_speed(fans);
 
     fan = fans;
-    while(fan != NULL) {
+    while (fan != NULL) {
 
-       fan->step_up = (float)( fan->fan_max_speed - fan->fan_min_speed ) /
-                      (float)( ( max_temp - high_temp ) * ( max_temp - high_temp + 1 ) / 2.0 );
+        fan->step_up = (float)(fan->fan_max_speed - fan->fan_min_speed) / (float)((max_temp - high_temp) * (max_temp - high_temp + 1) / 2.0);
 
-       fan->step_down = (float)( fan->fan_max_speed - fan->fan_min_speed ) /
-                        (float)( ( max_temp - low_temp ) * ( max_temp - low_temp + 1 ) / 2.0 );
-       fan = fan->next;
+        fan->step_down = (float)(fan->fan_max_speed - fan->fan_min_speed) / (float)((max_temp - low_temp) * (max_temp - low_temp + 1) / 2.0);
+        fan = fan->next;
     }
 
 recalibrate:
-    if(verbose) {
+    if (verbose) {
         mbp_log(LOG_INFO, "Sleeping for 2 seconds to get first temp delta");
     }
     sleep(2);
 
-    while(1) {
+    while (1) {
         old_temp = new_temp;
         new_temp = get_temp(sensors);
 
         fan = fans;
 
-	while(fan != NULL) {
-	    fan_speed = fan->old_speed;
+        while (fan != NULL) {
+            fan_speed = fan->old_speed;
 
-	    if(new_temp >= max_temp && fan->old_speed != fan->fan_max_speed) {
+            if (new_temp >= max_temp && fan->old_speed != fan->fan_max_speed) {
                 fan_speed = fan->fan_max_speed;
             }
 
-            if(new_temp <= low_temp && fan_speed != fan->fan_min_speed) {
+            if (new_temp <= low_temp && fan_speed != fan->fan_min_speed) {
                 fan_speed = fan->fan_min_speed;
             }
 
             temp_change = new_temp - old_temp;
 
-            if(temp_change > 0 && new_temp > high_temp && new_temp < max_temp) {
-                steps = ( new_temp - high_temp ) * ( new_temp - high_temp + 1 ) / 2;
-                fan_speed = max( fan_speed, ceil(fan->fan_min_speed + steps * fan->step_up) );
+            if (temp_change > 0 && new_temp > high_temp && new_temp < max_temp) {
+                steps = (new_temp - high_temp) * (new_temp - high_temp + 1) / 2;
+                fan_speed = max(fan_speed, ceil(fan->fan_min_speed + steps * fan->step_up));
             }
 
-            if(temp_change < 0 && new_temp > low_temp && new_temp < max_temp) {
-                steps = ( max_temp - new_temp ) * ( max_temp - new_temp + 1 ) / 2;
-                fan_speed = min( fan_speed, floor(fan->fan_max_speed - steps * fan->step_down) );
+            if (temp_change < 0 && new_temp > low_temp && new_temp < max_temp) {
+                steps = (max_temp - new_temp) * (max_temp - new_temp + 1) / 2;
+                fan_speed = min(fan_speed, floor(fan->fan_max_speed - steps * fan->step_down));
             }
 
-            if(verbose) {
+            if (verbose) {
                 mbp_log(LOG_INFO, "Old Temp: %d New Temp: %d Fan: %s Speed: %d Max MHz: %d", old_temp, new_temp, fan->label, fan_speed, get_max_mhz());
-	    }
+            }
 
-	    set_fan_speed(fan, fan_speed);
-       	    fan = fan->next;
-	} 
+            set_fan_speed(fan, fan_speed);
+            fan = fan->next;
+        }
 
-        if(verbose) {
+        if (verbose) {
             mbp_log(LOG_INFO, "Sleeping for %d seconds", polling_interval);
         }
-   
+
         time_t before_sleep = time(NULL);
 
         // call nanosleep instead of sleep to avoid rt_sigprocmask and
@@ -689,7 +680,7 @@ recalibrate:
         nanosleep(&ts, NULL);
 
         time_t after_sleep = time(NULL);
-        if(after_sleep - before_sleep > 2 * polling_interval) {
+        if (after_sleep - before_sleep > 2 * polling_interval) {
             mbp_log(LOG_INFO, "Clock skew detected - slept for %ld seconds but expected %d", after_sleep - before_sleep, polling_interval);
             set_fans_man(fans);
             goto recalibrate;

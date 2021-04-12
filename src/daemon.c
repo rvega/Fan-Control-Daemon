@@ -16,7 +16,6 @@
  *
  */
 
-
 #include <sys/prctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -43,7 +42,7 @@ int write_pid(int pid)
     FILE *file = NULL;
     file = fopen(PROGRAM_PID, "w");
 
-    if(file != NULL) {
+    if (file != NULL) {
         fprintf(file, "%d", pid);
         fclose(file);
         return 1;
@@ -59,14 +58,13 @@ int read_pid()
     int pid = -1;
     file = fopen(PROGRAM_PID, "r");
 
-    if(file != NULL) {
+    if (file != NULL) {
         fscanf(file, "%d", &pid);
         fclose(file);
-        if (kill(pid, 0) == -1 && errno == ESRCH)
-        { /* a process with such a pid does not exist, remove the pid file */
-          if (remove(PROGRAM_PID) ==  0) {
-            return -1;
-          }
+        if (kill(pid, 0) == -1 && errno == ESRCH) { /* a process with such a pid does not exist, remove the pid file */
+            if (remove(PROGRAM_PID) == 0) {
+                return -1;
+            }
         }
         return pid;
     }
@@ -81,40 +79,40 @@ int delete_pid()
 
 static void cleanup_and_exit(int exit_code)
 {
-	delete_pid();
-	set_fans_auto(fans);
-	
-	struct s_fans *next_fan;
-	while (fans != NULL) {
-		next_fan = fans->next;
-		if (fans->file != NULL) {
-			fclose(fans->file);
-		}
-		free(fans->label);
-		free(fans->fan_output_path);
-		free(fans->fan_manual_path);
-		free(fans);
-		fans = next_fan;
-	}
+    delete_pid();
+    set_fans_auto(fans);
 
-	struct s_sensors *next_sensor;
-	while (sensors != NULL) {
-		next_sensor = sensors->next;
-		if (sensors->file != NULL) {
-			fclose(sensors->file);
-		}
-		free(sensors->path);
-		free(sensors);
-		sensors = next_sensor;
-	}
+    struct s_fans *next_fan;
+    while (fans != NULL) {
+        next_fan = fans->next;
+        if (fans->file != NULL) {
+            fclose(fans->file);
+        }
+        free(fans->label);
+        free(fans->fan_output_path);
+        free(fans->fan_manual_path);
+        free(fans);
+        fans = next_fan;
+    }
 
-	exit(exit_code);
+    struct s_sensors *next_sensor;
+    while (sensors != NULL) {
+        next_sensor = sensors->next;
+        if (sensors->file != NULL) {
+            fclose(sensors->file);
+        }
+        free(sensors->path);
+        free(sensors);
+        sensors = next_sensor;
+    }
+
+    exit(exit_code);
 }
 
 void signal_handler(int signal)
 {
 
-    switch(signal) {
+    switch (signal) {
     case SIGHUP:
         syslog(LOG_WARNING, "Received SIGHUP signal.");
         retrieve_settings(NULL, fans);
@@ -151,7 +149,7 @@ void go_daemon(void (*fan_control)())
     signal(SIGINT, signal_handler);
 
     // Setup syslog logging - see SETLOGMASK(3)
-    if(verbose) {
+    if (verbose) {
         setlogmask(LOG_UPTO(LOG_DEBUG));
         openlog(PROGRAM_NAME, LOG_CONS | LOG_NDELAY | LOG_PERROR | LOG_PID, LOG_USER);
 
@@ -198,14 +196,11 @@ void go_daemon(void (*fan_control)())
             exit(EXIT_FAILURE);
         }
 
-
-
         /* Close out the standard file descriptors */
         close(STDIN_FILENO);
         close(STDOUT_FILENO);
         close(STDERR_FILENO);
     }
-
 
     int current_pid = getpid();
 
@@ -229,10 +224,9 @@ void go_daemon(void (*fan_control)())
         exit(EXIT_FAILURE);
     }
 
-
     fan_control();
 
-    if(daemonize) {
+    if (daemonize) {
         syslog(LOG_INFO, "%s daemon exiting", PROGRAM_NAME);
     }
 }

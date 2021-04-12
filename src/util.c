@@ -16,6 +16,6 @@ void mbp_log(int level, const char *fmt, ...)
 
     va_start(args, fmt);
     vprintf(fmt, args);
-    puts("");  // trailing newline
+    puts(""); // trailing newline
     va_end(args);
 }

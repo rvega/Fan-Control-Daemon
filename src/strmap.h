@@ -37,8 +37,7 @@
 #define _STRMAP_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include <stdlib.h>
@@ -63,7 +62,7 @@ typedef struct StrMap StrMap;
  *
  * Return value: None.
  */
-typedef void(*sm_enum_func)(const char *key, const char *value, const void *obj);
+typedef void (*sm_enum_func)(const char *key, const char *value, const void *obj);
 
 /*
  * Creates a string map.
@@ -76,7 +75,7 @@ typedef void(*sm_enum_func)(const char *key, const char *value, const void *obj)
  * Return value: A pointer to a string map object,
  * or null if a new string map could not be allocated.
  */
-StrMap * sm_new(unsigned int capacity);
+StrMap *sm_new(unsigned int capacity);
 
 /*
  * Releases all memory held by a string map object.
@@ -186,7 +185,7 @@ int sm_enum(const StrMap *map, sm_enum_func enum_func, const void *obj);
 
 /*
 
-		   GNU LESSER GENERAL PUBLIC LICENSE
+                   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>

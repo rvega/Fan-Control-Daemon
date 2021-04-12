@@ -31,7 +31,7 @@
 
 void print_usage(int argc, char *argv[])
 {
-    if (argc >=1) {
+    if (argc >= 1) {
         printf("Usage: %s OPTION(S) \n", argv[0]);
         printf("Options:\n");
         printf("\t-h Show this help screen\n");
@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
 
     int c;
 
-    while( (c = getopt(argc, argv, "hfv|help")) != -1) {
-        switch(c) {
+    while ((c = getopt(argc, argv, "hfv|help")) != -1) {
+        switch (c) {
         case 'h':
             print_usage(argc, argv);
             exit(EXIT_SUCCESS);
