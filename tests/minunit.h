@@ -12,16 +12,16 @@
 extern int tests_run;
 
 
-static const char *test_sensor_paths();
-static const char *test_fan_paths();
-static const char *test_get_temp();
-static const char *test_config_file();
-static const char *test_settings();
+static const char *test_sensor_paths(void);
+static const char *test_fan_paths(void);
+static const char *test_get_temp(void);
+static const char *test_config_file(void);
+static const char *test_settings(void);
 static void handler(int signal);
-static const char *test_sighup_receive();
-static const char *test_settings_reload();
-static const char *all_tests();
+static const char *test_sighup_receive(void);
+static const char *test_settings_reload(void);
+static const char *all_tests(void);
 
-int tests();
+int tests(const char *program_path);
 
 #endif

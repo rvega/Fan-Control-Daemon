@@ -19,6 +19,8 @@
 
 #include <stdbool.h>
 
+#include "global.h"
+
 /** Temperature Thresholds
  *  low_temp - temperature below which fan speed will be at minimum
  *  high_temp - fan will increase speed when higher than this temperature
@@ -31,14 +33,6 @@ extern int max_temp;
  *  Default value was 10 (seconds)
  */
 extern int polling_interval;
-
-/** Represents a Temperature sensor
- */
-struct s_sensors;
-typedef struct s_sensors t_sensors;
-
-struct s_fans;
-typedef struct s_fans t_fans;
 
 char *smprintf(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
 

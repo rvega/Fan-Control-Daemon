@@ -30,6 +30,8 @@ struct s_fans {
     struct s_fans *next;
 };
 
+/** Represents a Temperature sensor
+ */
 typedef struct s_sensors t_sensors;
 typedef struct s_fans t_fans;
 
